@@ -226,7 +226,10 @@ plot_yldine_heaolu = function(vastaja_data){
                               font = list(size = 13, color = "#76787B")),
            title = list(text = 'Üldine heaolu', 
                         x = 0.18,
-                        font = list(size = 22, color = "#646369")))
+                        y = 1,
+                        font = list(size = 22, color = "#646369"),
+                        pad = list(t = 15)
+                        ))
   return(joonis)
 }
 
@@ -702,6 +705,10 @@ ui <- dashboardPage(
       .infoBoxContainer {
         display: flex;
         flex-direction: column;
+      }
+      
+      .infoBoxContainer p {
+        text-align: initial;
       }
       
       .marginBottomZero {
