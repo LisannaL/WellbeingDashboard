@@ -1322,6 +1322,10 @@ ui <- dashboardPage(
                 ),
                 # plot 4
                 plotlyOutput("joonis4", width="66%", height="800px")
+                
+              ),
+              div(
+                p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
               )
               
       ),
