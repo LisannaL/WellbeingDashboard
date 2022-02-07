@@ -220,7 +220,7 @@ plot_yldine_heaolu = function(vastaja_data){
   
   joonis = ggplotly(joonis, tooltip = c('text')) %>% hide_legend() %>% 
     layout(annotations = list(x = 22.5, y = 3.5, 
-                              text = "0-5.99 Väga madal \n 6-11.99 Madal\n 12-17.99 Keskmine\n 18-23.99 Kõrge\n 24-30 Väga kõrge", 
+                              text = " 0-5.99 Väga madal \n 6-11.99 Madal\n 12-17.99 Keskmine\n 18-23.99 Kõrge\n 24-30 Väga kõrge", 
                               showarrow = F,
                               align = 'left',
                               font = list(size = 13, color = "#76787B")),
@@ -378,8 +378,8 @@ plot_koik_heaolud = function(vastaja_data){
 
 ### 4. plot: koik heaolud + riigid
 
-plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ # , input_riik
-  print(input_riik)
+plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ 
+  # print(input_riik)
   add_closed_trace <- function(p, r, theta, ...)
   {
     plotly::add_trace(p, r = c(r, r[1]), theta = c(theta, theta[1]), ...)
@@ -508,7 +508,9 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ # , input_riik
   
   joonis4 = plot_ly(
     type = 'scatterpolar',
-    mode = 'lines') %>%
+    mode = 'lines',
+    fill = 'toself',
+    line = list(shape = 'spline')) %>%
     add_closed_trace(
       name = 'Eesti',
       mode = 'lines+markers',
@@ -518,12 +520,14 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ # , input_riik
       name = 'Taani',
       mode = 'lines+markers',
       r = round(as.numeric(koik_taani$skoor), 2),
-      theta = koik_taani$soned) %>%
+      theta = koik_taani$soned,
+      visible = "legendonly") %>%
     add_closed_trace(
       name = 'Bulgaaria',
       mode = 'lines+markers',
       r = round(as.numeric(koik_bulgaaria$skoor), 2),
-      theta = koik_bulgaaria$soned) %>%
+      theta = koik_bulgaaria$soned,
+      visible = "legendonly") %>%
     add_closed_trace(
       name = 'Teie',
       mode = 'lines+markers',
@@ -533,7 +537,8 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ # , input_riik
       name = input_riik,
       mode = 'lines+markers',
       r = round(as.numeric(vali_riik$skoor), 2),
-      theta = vali_riik$soned) %>%
+      theta = vali_riik$soned,
+      visible = "legendonly") %>%
     layout(
       polar = list(
         radialaxis = list(
@@ -551,6 +556,7 @@ render_heaoluEesti = function(vastaja_andmed){
   tase = ifelse(tase$total_heaoluskoor > 20.09259, 'kõrgem', 'madalam')
   return(tase)
 }
+
 
 ### SOOVITUSED
 render_dimensiooniTekstid = function(output, vastaja_andmed){
@@ -631,7 +637,8 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
   }
   
   if(length(vektor) != 0) {
-    output$hasti = renderText({paste("Teie", paste(vektor,collapse=", ") ,"on Teil kõik hästi, jätkake samas vaimus.")})
+    #output$hasti = renderText({paste("Teie", paste(vektor,collapse=", ") ,"on Teil kõik hästi, jätkake samas vaimus.")})
+    output$hasti = renderText({paste("<b>Järgnevate heaolu dimensioonidega: </b>", paste(vektor,collapse=", ") ," <b>- on Teil kõik hästi, jätkake samas vaimus.</b>")})
   }
   
   output$soovitused = renderText({soovitused})
@@ -655,7 +662,7 @@ ui <- dashboardPage(
       '
         @media (min-width: 768px){
           .sidebar-mini.sidebar-collapse .main-header .logo {
-              width: 180px; 
+              width: 180px;
           }
           .sidebar-mini.sidebar-collapse .main-header .navbar {
               margin-left: 180px;
@@ -1281,6 +1288,7 @@ ui <- dashboardPage(
                   #   # )
                   # )
                 ),
+                
                 # plot 2
                 plotlyOutput("joonis2", width="50%", height="600px")
               ),
@@ -1295,6 +1303,7 @@ ui <- dashboardPage(
                   ),
                   htmlOutput('soovitused', inline=T),
                 ),
+                
                 # plot 3
                 div(
                   class="highchart-graph-container",
@@ -1311,7 +1320,7 @@ ui <- dashboardPage(
                           strong(textOutput('heaoluEesti', inline=T)), 
                           span(' kui Eesti keskmine.'))),
                   span(
-                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi(Bulgaaria) omaga (klõpsa riigil, et see jooniselt välja jätta).')),
+                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Bulgaaria) omaga (klõpsa riigil, et see joonisele lisada).')),
                   #
                   selectInput("select", label = h3("Vali võrdlemiseks riik:"), 
                               choices = list("Austria" = "Austria", "Belgia" = "Belgia", "Hispaania" = "Hispaania", "Holland" = "Holland", "Horvaatia" = "Horvaatia", "Iirimaa" = "Iirimaa",
@@ -1320,6 +1329,7 @@ ui <- dashboardPage(
                                              "Slovakkia" = "Slovakkia", "Sloveenia" = "Sloveenia", "Soome" = "Soome",  "Tšehhi" = "Tšehhi", 
                                              "Ungari" = "Ungari", "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)"))
                 ),
+                
                 # plot 4
                 plotlyOutput("joonis4", width="66%", height="800px")
                 
@@ -1328,35 +1338,7 @@ ui <- dashboardPage(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
               )
               
-      ),
-      
-      # Fourth tab content
-      tabItem(tabName = "protsess",
-              h1('Protsessi kaardistus'),
-              div(
-                class='aboutPage',
-              div(
-                img(src='protsess3.png')
-              ),
-              
-              div(
-                h1('Kujundus'),
-                h2('Dashboard'),
-                h4('Dashboardis on läbivalt kasutatud fonti Montserrat. Pealkirjade osas on kasutusel H1-H5 - olenevalt sellest, mis kuskile sobis. Teksti esiletoomiseks on kasutatud paksu kirja, kuid ühes kohas ka suuri tähti. Esilehel on peamine catch phrase vormingus H1 ja paksus kirjas. Läbivalt on elementide kohandamiseks kasutatud ka CSS-i reegleid. Esilehe alapealkiri on vormingus H2 ning sellele järgneb tavaline tekstiosa. Teksti on joondatud nii, et see ei oleks lehe Ühe otsast teise. Lisaks on logod joondatud samuti olema teksti suhtes keskel. Logode osas on jälgitud, et kahe logo vahel oleks piisavalt vaba ruumi (k.a Tartu Ülikooli logo vaba ruumi nõue).'),
-                h4('Küsimustiku esilehel on kasutatud H1 ja lisainfo esiletoomiseks tavalist teksti. Küsimuste puhul on kasutusel H3 ja H4 ning vastavalt küsimusele ka kaldkiri ilmestamaks mingisugust väidet, millele kasutaja küsimusele vastates mõelda võiks. Küsimuse, lisainfo, vastusevariandid ning edasi või tagasi suunavad nupud on joondatud lehe keskele. Vastamise lihtsustamiseks on küsimuste vastusevariandid nummerdatud.'),
-                h4('Kolmandal, jooniste lehel on kuvatud tulemused vastaja sisendi alusel. Lehel on kokku neli joonist ning kolm kujundatud numbrilist fakti. Üleüldiselt on tähtsaim info esile toodud paksu kirjaga. Numbriliste faktide juures on toodud fakti iseloomustavad ikoonid, tähtsaim info (number) on esitatud paksus kirjas ja sellele järgenv tekst tavalises, väiksemas kirjas. Kasutatud on sama värvi erinevaid alatoone. Jooniste puhul olen pÜÜdnud jälgida SWD visualiseerimise reegleid. Joonistel kasutatud värvid on valitud taotluslikult, st et tervikuna sobiks kõik kokku. Värvide valik oli inspireeritud teisest ja kolmandast joonisest, kus ma üritasin heaolu tüübi sobitada sellele vastava värviga. Näiteks on kognitiivne heaolu kujutatud punaselt, kuna see võiks esindada (sisemist) tugevust ehk seda saab seostada sellega, kui rahul inimene oma eluga on. Afektiivne heaolu, mis iseloomustab õnnelikkust, on kujutatud oranžilt, mis peaks sümboliseerima õnnelikkust, edukust ja entusiasmi. Eudaineemiline heaolu on kujutatud siniselt, kuna sinine värv peaks olema seotud harmoonia ja tasakaaluga. Värvid peaks aitama ka kolmandal joonisel üles leida, millisesse heaolu aladimensiooni mingi tegur kuulub. Alternatiivse paletina kasutasin alguses nende kahe joonise puhul toon heledamat paletti, ent kuna numbrilisi fakte oli võimalik kujutada ainult teatud Shiny etteantud värvidega, siis terviklikkuse huvides tuli jääda praeguse paleti juurde. Alguses oli visioon pigem selline, et heaolu seostub veidi rohkem pehmemate ja nn sõbralikemate värvidega. Pikalt sai mõeldud ka tausta üle, ent valge taust tundus hetkel jätvat kõige puhtama mulje. Allolevatel piltidel on kujutatud jooniste värvipaleti ja numbriliste faktide alternatiivid.'),
-                h4('Kasutajakogemuse huvides on dashboard seadistatud nii, et kui minna rakendust avades kohe tulemusi vaatama, suunatakse kasutaja siiski enne küsimuste juurde.')),
-              
-              div(
-                img(src='alternatiiv.png'),
-                img(src='alternatiiv_2.PNG')
-              ),
-              
-              div(h2('Protsessi joonis'),
-                  h4("Protsess joonise kujundust inspireeris paber-prototüüpimine. Valituks osutusid elemendid, mis sarnanevad pliiatsiga paberile kirjutamisele. Näiteks on sellel põhimõttel valitud viis protsessi samme kirjeldavat erineva värviga kasti. Samuti ka suuremad kastid, mis on ümarate äärte ja üleüldiselt nn ebaperfektse väljanägemisega. Protsessi etapid on lähemalt kirjeldatud värviliste kastide all olevates suurtes kastides, kus on loeteluna välja toodud peamised sammud. Samuti on lisatud etapile iseloomulikke visuaale, mis tõstaks esile etapi sisu. On jälgitud mustrit, et kui ühes kastis on visuaal ülaosas, siis sellest järgmisel on allosas ja nii kõigi viie kastiga. Visuaalide puhul on jälgitud sama põhimõtet, et need sobiks teema ning teiste komponentidega kokku ja väljanägemiselt sarnaneksid sellele, mida joonistataks ka paberil. Etapi nime esile toomiseks on kasutatud suuri tähti ja paksu kirja, samuti on etappide nime kirjasuurus (13p) ühe võrra suurem, kui seda on loetelus oleva kirjasuurus (12p). Fondina on kasutatud Lucida Console'i. Joonis valmis diagrams.net keskkonnas.")
-              )
-              )
-      )
+      ) #,
     )
   )
   
@@ -1409,7 +1391,6 @@ server <- function(input, output, session) {
         menuItem("Tutvustus", tabName = "tutvustus", icon = icon("info")),
         menuItem("Küsimustik", tabName = "kysimused", icon = icon("question")),
         menuItem("Tulemused", tabName = "tulemused", icon = icon("bar-chart")),
-        menuItem("Protsess", tabName = "protsess", icon = icon("network-wired")),
         span(class='hide', menuItem("saladus", tabName = "kysimus_1", icon = icon("th"))),
         span(class='hide', menuItem("saladus", tabName = "kysimus_2", icon = icon("th"))),
         span(class='hide', menuItem("saladus", tabName = "kysimus_3", icon = icon("th"))),
@@ -1433,7 +1414,6 @@ server <- function(input, output, session) {
       menuItem("Tutvustus", tabName = "tutvustus", icon = icon("info")),
       menuItem("Küsimustik", tabName = "kysimused", icon = icon("question")),
       menuItem("Tulemused", tabName = "tulemused-tuhi", icon = icon("bar-chart")),
-      menuItem("Protsess", tabName = "protsess", icon = icon("network-wired")),
       span(class='hide', menuItem("saladus", tabName = "kysimus_1", icon = icon("th"))),
       span(class='hide', menuItem("saladus", tabName = "kysimus_2", icon = icon("th"))),
       span(class='hide', menuItem("saladus", tabName = "kysimus_3", icon = icon("th"))),
