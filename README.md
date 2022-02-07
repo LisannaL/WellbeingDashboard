@@ -1,2 +1,2 @@
 # WellbeingDashboard
-R shiny dashboard project for ESS
+R shiny dashboard project for ESS (European Social Survey)
