@@ -545,7 +545,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
           visible = T,
           range = c(0,10))),
       showlegend = T,
-      legend = list(x =0, y = 1))
+      legend = list(x =0, y = 1, title = list(text = '<b> Joonisele lisamiseks kliki riigil: </b>')))
   
   return(joonis4)
   
@@ -657,7 +657,7 @@ ui <- dashboardPage(
     sidebarMenuOutput("menu")
   ),
   dashboardBody(
-    
+    tags$script(HTML("$('body').addClass('fixed');")), # make navbar and sidebar sticky
     tags$style(
       '
         @media (min-width: 768px){
