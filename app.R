@@ -212,7 +212,7 @@ plot_yldine_heaolu = function(vastaja_data){
   
   joonis = ggplot(vastaja_data, aes(total_heaoluskoor, reorder(riik, +total_heaoluskoor), 
                               fill=factor(ifelse(riik=="Eesti" , 'HOME', ifelse(riik=="Teie" , "USER" ,'DEFAULT'))),
-                              text = paste("Riik: ", riik, "</br></br>", "Üldskoor: ", round(total_heaoluskoor, 2)))) +
+                              text = paste("Riik: ", riik, "</br></br>", "Üldtulemus: ", round(total_heaoluskoor, 2)))) +
     geom_bar(stat='identity') + 
     scale_fill_manual(name = "riik", values=c("#BFBEBE","#4A81BF","#C3514E")) + #gray9, green4/blue2, red1
     labs(y = "", x = "", title = "") +
@@ -224,7 +224,7 @@ plot_yldine_heaolu = function(vastaja_data){
                               showarrow = F,
                               align = 'left',
                               font = list(size = 13, color = "#76787B")),
-           title = list(text = 'Üldine heaolu', 
+           title = list(text = 'Üldine subjektiivne heaolu', 
                         x = 0.18,
                         y = 1,
                         font = list(size = 22, color = "#646369"),
@@ -275,9 +275,9 @@ plot_heaolud = function(vastaja_data){
                                                     '\n<b>Skaala:</b>\n0-1.99 Väga madal\n2-3.99 Madal\n4-6.99 Keskmine\n7-8.99 Kõrge\n9-10 Väga kõrge'))) +
     geom_bar(stat = "identity", show.legend = FALSE, width = 0.6) +
     labs(y="", x = "") +
-    ylim(0, 10) +
+    #ylim(0, 10) +
     scale_fill_manual(name = "heaolud", values=c("#F79747", "#4A81BF", "#C3514E")) + #orange2, blue6, red2 # uus: ORANGE1, BLUE2, RED1 
-    scale_x_discrete(labels = c("Afektiivne heaolu", "Eudaineemiline heaolu", "Kognitiivne heaolu")) +
+    scale_x_discrete(labels = c("Emotsionaalne heaolu", "Toimetuleku heaolu", "Hinnanguline heaolu")) +
     theme_swd() 
   
   
@@ -344,7 +344,7 @@ plot_koik_heaolud = function(vastaja_data){
            afek_onnelikkus, afek_masendus, afek_room, 
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus) %>% 
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>% 
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>% 
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>% 
     arrange(group, skoor) %>% 
     mutate(soned = c("Heas tujus olemine ja rõõmu tundmine viimasel 2 nädalal", 
                      "Üldine õnnelikkuse\n tunne", 
@@ -367,7 +367,7 @@ plot_koik_heaolud = function(vastaja_data){
       data = round(koik_heaolud2$skoor, 2),
       colorByPoint = T,
       type = "column", # afek orange2, euda blue6, kog red2 # uus: ORANGE1, RED1, BLUE2
-      colors = ifelse(koik_heaolud2$group=="Afektiivne" , "#F79747", ifelse(koik_heaolud2$group=="Kognitiivne" , "#C3514E" , "#4A81BF")),
+      colors = ifelse(koik_heaolud2$group=="Emotsionaalne" , "#F79747", ifelse(koik_heaolud2$group=="Hinnanguline" , "#C3514E" , "#4A81BF")),
       showInLegend = F)) %>% 
     hc_tooltip(shared = F,
                borderColor = "black")
@@ -394,7 +394,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>%
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group, skoor) %>%
     mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
                      "Üldine õnnelikkuse\n tunne",
@@ -418,7 +418,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>%
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group, skoor) %>%
     mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
                      "Üldine õnnelikkuse\n tunne",
@@ -442,7 +442,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>%
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group, skoor) %>%
     mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
                      "Üldine õnnelikkuse\n tunne",
@@ -466,7 +466,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>%
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group, skoor) %>%
     mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
                      "Üldine õnnelikkuse\n tunne",
@@ -490,7 +490,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
-    mutate(group=c( rep('Kognitiivne', 5), rep('Afektiivne', 3), rep('Eudaineemiline', 4))) %>%
+    mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group, skoor) %>%
     mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
                      "Üldine õnnelikkuse\n tunne",
@@ -638,7 +638,7 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
   
   if(length(vektor) != 0) {
     #output$hasti = renderText({paste("Teie", paste(vektor,collapse=", ") ,"on Teil kõik hästi, jätkake samas vaimus.")})
-    output$hasti = renderText({paste("<b>Järgnevate heaolu dimensioonidega: </b>", paste(vektor,collapse=", ") ," <b>- on Teil kõik hästi, jätkake samas vaimus.</b>")})
+    output$hasti = renderText({paste("<b>Järgnevate heaolu komponentidega: </b>", paste(vektor,collapse=", ") ," <b>- on Teil kõik hästi, jätkake samas vaimus.</b>")})
   }
   
   output$soovitused = renderText({soovitused})
@@ -925,14 +925,20 @@ ui <- dashboardPage(
       tabItem(tabName = "tutvustus",
               div(
                 class='landing-page',
-                h1(class= 'marginBottomZero',strong('Kui hästi mul läheb? Kui õnnelik ma olen? Kuidas tõsta enda heaolu?')),
+                h1(class= 'marginBottomZero', strong('HEAOLUMEETER')),
+                h1(class= 'marginBottomZero', strong('Kui hästi mul läheb? Kui õnnelik ma olen? Kuidas tõsta enda heaolu?')),
                 h2(''),
                 h2(class = 'marginZero', 'Kui soovite vastuseid nendele küsimustele, siis olete õiges kohas.'),
-                p(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
+                h4(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
                 p(' '),
-                p('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
-                h2('Mis on Euroopa Sotsiaaluuring?'),
-                p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Kokku on andmestikus 300 000 inimese andmed 35 riigist. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                h4('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
+                #h2('Mis on Euroopa Sotsiaaluuring?'),
+                h2(''),
+                h4('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                h2('Mis on heaolu?'),
+                #
+                span(HTML('<h4>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</h4>')
+                ),
                 div(
                   class = 'btnContainer',
                   actionButton('switchtab', 'Mine küsimustikku täitma')
@@ -940,7 +946,8 @@ ui <- dashboardPage(
                 div(
                   class = 'logoContainer',
                   img(src='ut_logo.png', height=100, width=246),
-                  img(src='ess_logo.png', height=75, width=160)
+                  img(src='ess_logo.png', height=75, width=160),
+                  img(src='strukt.png', height=100, width=246)
                 )
                 
               )
@@ -951,7 +958,7 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h2(class = 'marginZero center-text', "Järgnevalt palume Teil vastata 12-le küsimusele."),
-                p(class = 'marginBottomZero center-text', 'Vastamine on anonüümne. Teie vastuseid kasutatakse ainult siin ja praegu, et välja selgitada Teie heaolu tase. '),
+                h4(class = 'marginBottomZero center-text', 'Vastamine on anonüümne. Teie vastuseid kasutatakse ainult siin ja praegu, et välja selgitada Teie heaolu tase. '),
                 div(
                   class = 'btnContainer',
                   actionButton('edasi', 'Edasi')
@@ -1004,7 +1011,7 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','3. Kuivõrd Te nõustute või ei nõustu järgmise väitega? '),
-                h4(class='center-text',tags$i('Tunnen üldiselt, et see, mida ma teen, on väärtuslik.')),
+                h3(class='center-text','Tunnen üldiselt, et see, mida ma teen, on väärtuslik.'),
                 div(
                   class='radio-input-container',
                   radioButtons("radio1",
@@ -1024,7 +1031,7 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','4. Kuivõrd Te nõustute või ei nõustu järgmise väitega?'),
-                h4(class='center-text',tags$i('Tunnen, et saan vabalt otsustada, kuidas oma elu elada. ')),
+                h3(class='center-text', 'Tunnen, et saan vabalt otsustada, kuidas oma elu elada. '),
                 div(
                   class='radio-input-container',
                   radioButtons("radio2",
@@ -1081,8 +1088,7 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_7",
               div(
                 class='input-page',
-                h3(class='center-text','7. Palun öelge järgneva väite kohta, milline neist vastab kõige paremini sellele, kuidas Te olete ennast viimase 2 nädala jooksul tundnud.'),
-                h4(class='center-text',tags$i('Olen tundnud masendust ja depressiooni.')),
+                h3(class='center-text','7. Kui tihti olete viimase 2 nädala jooksul tundnud masendust ja depressiooni?'),
                 div(
                   class='radio-input-container',
                   radioButtons("radio5",
@@ -1101,8 +1107,7 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_8",
               div(
                 class='input-page',
-                h3(class='center-text','8. Palun öelge järgneva väite kohta, milline neist vastab kõige paremini sellele, kuidas Te olete ennast viimase 2 nädala jooksul tundnud.'),
-                h4(class='center-text',tags$i('Olen olnud rõõmus ja heas tujus. ')),
+                h3(class='center-text','8. Kui tihti olete viimase 2 nädala jooksul olnud rõõmus ja heas tujus? '),
                 div(
                   class='radio-input-container',
                   radioButtons("radio6",
@@ -1121,8 +1126,7 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_9",
               div(
                 class='input-page',
-                h3(class='center-text','9. Palun öelge järgneva väite kohta, milline neist vastab kõige paremini sellele, kuidas Te olete ennast viimase 2 nädala jooksul tundnud.'),
-                h4(class='center-text',tags$i('Mu igapäevane elu on olnud täis mind huvitavaid asju. ')),
+                h3(class='center-text','9. Kui tihti olete viimase 2 nädala jooksul tundnud, et igapäevane elu on olnud täis huvitavaid asju? '),
                 div(
                   class='radio-input-container',
                   radioButtons("radio7",
@@ -1207,7 +1211,6 @@ ui <- dashboardPage(
       ),
       
       
-      
       # Third tab content
       tabItem(tabName = "tulemused",
               h1("TULEMUSED"),
@@ -1229,23 +1232,19 @@ ui <- dashboardPage(
                   ),
                   valueBox(
                     value = "2",
-                    subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EVS</b>"), 
+                    subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EQLS</b>"), 
                     color = 'orange',
                     icon = shiny::icon("book-open")
                   )
                 ),
                 div(
                   class='graph-text',
-                  span(h3('Teie heaolu on ', 
+                  span(h3('Teie subjektiivne heaolu on ', 
                           strong(textOutput('heaoluTase', inline=T)), 
-                          span(' - üldskoor on '), 
+                          span(' - üldtulemus on '), 
                           strong(textOutput('heaoluTaseNumber', inline=T)), 
                           span(' punkti'))),
-                  h5('Heaolu indeksi üldskoor koosneb kognitiivse heaolu, afektiivse heaolu ja eudaineemilise heaolu summeeritud hinnangutest.'),
-                  h3('Mis on heaolu?'),
-                  #
-                  span(HTML('<h5>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</h5>')
-                       )
+                  h5('Heaolu indeksi üldtulemus koosneb hinnangulise heaolu, emotsionaalse heaolu ja toimetuleku heaolu summeeritud hinnangutest.')
                 ),
                 # plot 1
                 plotlyOutput("joonis", width = "66%", height = "600px")
@@ -1254,26 +1253,26 @@ ui <- dashboardPage(
                 class='graph-container graph-container-reverse',
                 div(
                   class="graph-text",
-                  span(h3('Teie afektiivne heaolu on ', 
+                  span(h3('Teie emotsionaalne heaolu on ', 
                           strong(textOutput('afektiivneTase', inline=T)), 
-                          span(' - üldskoor on '), 
+                          span(' - üldtulemus on '), 
                           strong(textOutput('afektiivneNumber', inline=T)),
                           span(' punkti.'))),
-                  h4('Afektiivne heaolu puudutab meie emotsioone ehk seda, kuidas me end igal ajahetkel tunneme. Aitab mõista kui õnnelikud me oma elus oleme.'),
+                  h4('Emotsionaalne heaolu puudutab meie emotsioone ehk seda, kuidas me end igal ajahetkel tunneme. Aitab mõista kui õnnelikud me oma elus oleme.'),
                   h1(''),
-                  span(h3('Teie eudaineemiline heaolu on ', 
+                  span(h3('Teie toimetuleku heaolu on ', 
                           strong(textOutput('eudaTase', inline=T)), 
-                          span(' - üldskoor on '), 
+                          span(' - üldtulemus on '), 
                           strong(textOutput('eudaNumber', inline=T)), 
                           span(' punkti.'))),
-                  h4('Euidaineemiline heaolu on seotud tunnetusega, et minu elul on eesmärk, mõte või suund, minu elu on huvitav, olen sõltumatu ja autonoomne, ning mul on teistega positiivsed suhted. Aitab mõista, kui hästi meie elu toimib, sh kuivõrd elame kooskõlas oma tõelise minaga.'),
+                  h4('Toimetuleku heaolu on seotud tunnetusega, et minu elul on eesmärk, mõte või suund, minu elu on huvitav, olen sõltumatu ja autonoomne, ning mul on teistega positiivsed suhted. Aitab mõista, kui hästi meie elu toimib, sh kuivõrd elame kooskõlas oma tõelise minaga.'),
                   h1(''),
-                  span(h3('Teie kognitiivne heaolu on ', 
+                  span(h3('Teie hinnanguline heaolu on ', 
                           strong(textOutput('kogTase', inline=T)), 
-                          span(' - üldskoor on '), 
+                          span(' - üldtulemus on '), 
                           strong(textOutput('kogNumber', inline=T)), 
                           span(' punkti.'))),
-                  h4('Kognitiivne heaolu on seotud hinnangutega, mida me oma elu ja selle erinevate aspektide kohta anname. Aitab mõista, kui rahul me oma eluga oleme. '),
+                  h4('Hinnanguline heaolu on seotud hinnangutega, mida me oma elu ja selle erinevate aspektide kohta anname. Aitab mõista, kui rahul me oma eluga oleme. '),
                   h1(' '), 
                   # div(
                   #   class='horizontalCenter',
@@ -1311,7 +1310,7 @@ ui <- dashboardPage(
                   )#1140
               ),
               
-              div(#plotlyOutput("joonis4", width="66%", height="800px"),
+              div(
                 class='graph-container graph-container-reverse',
                 div(
                   class="graph-text-evenly",
@@ -1320,7 +1319,7 @@ ui <- dashboardPage(
                           strong(textOutput('heaoluEesti', inline=T)), 
                           span(' kui Eesti keskmine.'))),
                   span(
-                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Bulgaaria) omaga (klõpsa riigil, et see joonisele lisada).')),
+                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Bulgaaria) omaga.')),
                   #
                   selectInput("select", label = h3("Vali võrdlemiseks riik:"), 
                               choices = list("Austria" = "Austria", "Belgia" = "Belgia", "Hispaania" = "Hispaania", "Holland" = "Holland", "Horvaatia" = "Horvaatia", "Iirimaa" = "Iirimaa",
@@ -1336,6 +1335,8 @@ ui <- dashboardPage(
               ),
               div(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
+                p(class = 'marginBottomZero', HTML('<br>Kontseptuaalne teostus: Oliver Nahkur, Mare Ainsaar')),
+                p(class = 'marginBottomZero', 'Tehniline teostus: Lisanna Lehes')
               )
               
       ) #,
