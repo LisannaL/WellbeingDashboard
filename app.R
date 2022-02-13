@@ -680,6 +680,10 @@ ui <- dashboardPage(
         max-width: 1400px
       }
       
+      .landing-page-content {
+        display: flex;
+      }
+      
       .aboutPage {
         max-width: 1200px;
         text-align: justify;
@@ -735,6 +739,12 @@ ui <- dashboardPage(
         position: absolute;
         width: 100%;
         bottom: 0;
+      }
+      
+      .input-page .btn-default {
+        padding: 16px;
+        font-size: 16px;
+        width: 100px;
       }
       
       .logoContainer {
@@ -847,6 +857,13 @@ ui <- dashboardPage(
         margin-bottom: 48px;
       }
       
+      .newButton {
+        padding: 24px;
+        font-size: 16px;
+        border: 1px solid black;
+        border-radius: 8px;
+      }
+      
       .highchart-graph-container {
         display: flex;
         justify-content: center;
@@ -923,31 +940,58 @@ ui <- dashboardPage(
     tabItems(
       # First tab content
       tabItem(tabName = "tutvustus",
+              
               div(
                 class='landing-page',
-                h1(class= 'marginBottomZero', strong('HEAOLUMEETER')),
-                h1(class= 'marginBottomZero', strong('Kui hästi mul läheb? Kui õnnelik ma olen? Kuidas tõsta enda heaolu?')),
-                h2(''),
-                h2(class = 'marginZero', 'Kui soovite vastuseid nendele küsimustele, siis olete õiges kohas.'),
-                h4(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
-                p(' '),
-                h4('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
-                #h2('Mis on Euroopa Sotsiaaluuring?'),
-                h2(''),
-                h4('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
-                h2('Mis on heaolu?'),
-                #
-                span(HTML('<h4>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</h4>')
+                div(
+                  class='landing-page-content',
+                  div(
+                    h1(class= 'marginBottomZero', strong('HEAOLUMEETER')),
+                    h1(class= 'marginBottomZero', strong('Kui hästi mul läheb? Kui õnnelik ma olen? Kuidas tõsta enda heaolu?')),
+                    h2(''),
+                    h2(class = 'marginZero', 'Kui soovite vastuseid nendele küsimustele, siis olete õiges kohas.'),
+                    h4(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
+                    p(' '),
+                    h4('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
+                    #h2('Mis on Euroopa Sotsiaaluuring?'),
+                    h2(''),
+                    h4('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                    h2('Mis on heaolu?'),
+                    #
+                    span(HTML('<h4>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</h4>')
+                    ),
+                  ),
+                  div(
+                    class='infoBoxContainer',
+                    valueBox(
+                      value = "> 300 000",
+                      subtitle = "inimese andmed",
+                      icon = shiny::icon("bar-chart"),
+                      color = "red"
+                    ),
+                    valueBox(
+                      value = "26",
+                      subtitle = " Euroopa riigi võrdluses",
+                      icon = shiny::icon("globe-europe"),
+                      color = "yellow"
+                    ),
+                    valueBox(
+                      value = "2",
+                      subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EQLS</b>"), 
+                      color = 'orange',
+                      icon = shiny::icon("book-open")
+                    )
+                  ),
                 ),
                 div(
                   class = 'btnContainer',
-                  actionButton('switchtab', 'Mine küsimustikku täitma')
+                  actionButton(class='newButton', 'switchtab', 'Mine küsimustikku täitma')
                 ),
                 div(
                   class = 'logoContainer',
-                  img(src='ut_logo.png', height=100, width=246),
-                  img(src='ess_logo.png', height=75, width=160),
-                  img(src='strukt.png', height=100, width=246)
+                  img(src='ut_logo.png', height=150, width=369),
+                  img(src='ess_logo.png', height=125, width=213),
+                  img(src='el_struktuuri.jpg', height=150, width=258)
                 )
                 
               )
@@ -1206,7 +1250,7 @@ ui <- dashboardPage(
               div(
                 class = 'btnContainer',
                 
-                actionButton('switchtab1', 'Mine küsimustikku täitma')
+                actionButton(class='newButton' ,'switchtab1', 'Mine küsimustikku täitma')
               )
       ),
       
@@ -1306,7 +1350,7 @@ ui <- dashboardPage(
                 # plot 3
                 div(
                   class="highchart-graph-container",
-                  highchartOutput("joonis3", width="62%", height="900px")
+                  highchartOutput("joonis3", width="90%", height="900px")
                   )#1140
               ),
               
