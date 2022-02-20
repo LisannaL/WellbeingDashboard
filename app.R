@@ -676,8 +676,30 @@ ui <- dashboardPage(
     tags$head(tags$style(HTML('
       @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
     
+      h1, h2, h3, h4, h5, strong, p, button, li, span {
+        font-family: Montserrat, sans-serif;
+      }
+      
+      .sidebar-mini.sidebar-collapse 
+      .main-header
+      .logo{
+        font-family: Montserrat, sans-serif;
+      }
+    
       .landing-page {
-        max-width: 1400px
+        max-width: 1550px
+      }
+      
+      .landing-page p {
+        font-size: 16px;
+      }
+      
+      .landing-page h1 {
+        font-size: 30px;
+      }
+      
+      .landing-page h2 {
+        font-size: 24px;
       }
       
       .landing-page-content {
@@ -687,16 +709,6 @@ ui <- dashboardPage(
       .aboutPage {
         max-width: 1200px;
         text-align: justify;
-      }
-      
-      h1, h2, h3, h4, h5, strong, p, button, li, span {
-        font-family: Montserrat;
-      }
-      
-      .sidebar-mini.sidebar-collapse 
-      .main-header
-      .logo{
-        font-family: Montserrat;
       }
       
       .input-page {
@@ -722,6 +734,22 @@ ui <- dashboardPage(
         text-align: initial;
       }
       
+      .infoBoxContainer-landingPage {
+        margin-left: 170px
+      }
+      
+      .infoBoxContainer-landingPage .small-box {
+        height: 150px;
+      }
+      
+      .infoBoxContainer-landingPage .small-box h3 {
+        font-size: 30px;
+      }
+      
+      .infoBoxContainer-landingPage .small-box p {
+        font-size: 14px;
+      }
+      
       .marginBottomZero {
         margin-bottom: 0;
       }
@@ -729,7 +757,7 @@ ui <- dashboardPage(
       .btnContainer {
         display: flex;
         justify-content: center;
-        margin-top: 64px;
+        margin-top: 16px;
       }
       
       .actionBtnContainer {
@@ -750,7 +778,7 @@ ui <- dashboardPage(
       .logoContainer {
         display: flex;
         justify-content: center;
-        margin-top: 96px;
+        margin-top: 48px;
       }
       
       .hide {
@@ -921,6 +949,10 @@ ui <- dashboardPage(
         height: 200px;
       }
       
+      .small-box .icon-large {
+        display: flex;
+      }
+      
       .small-box p {
         font-size: 18px;
       }
@@ -946,23 +978,22 @@ ui <- dashboardPage(
                 div(
                   class='landing-page-content',
                   div(
-                    h1(class= 'marginBottomZero', strong('HEAOLUMEETER')),
+                    h1(class= 'marginZero', strong('HEAOLUMEETER')),
                     h1(class= 'marginBottomZero', strong('Kui hästi mul läheb? Kui õnnelik ma olen? Kuidas tõsta enda heaolu?')),
                     h2(''),
                     h2(class = 'marginZero', 'Kui soovite vastuseid nendele küsimustele, siis olete õiges kohas.'),
-                    h4(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
-                    p(' '),
-                    h4('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
+                    p(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
+                    p(''),
+                    p('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
                     #h2('Mis on Euroopa Sotsiaaluuring?'),
-                    h2(''),
-                    h4('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                    p(''),
+                    p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
                     h2('Mis on heaolu?'),
-                    #
-                    span(HTML('<h4>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</h4>')
+                    span(HTML('<p>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</p>')
                     ),
                   ),
                   div(
-                    class='infoBoxContainer',
+                    class='infoBoxContainer infoBoxContainer-landingPage',
                     valueBox(
                       value = "> 300 000",
                       subtitle = "inimese andmed",
@@ -989,9 +1020,9 @@ ui <- dashboardPage(
                 ),
                 div(
                   class = 'logoContainer',
-                  img(src='ut_logo.png', height=150, width=369),
-                  img(src='ess_logo.png', height=125, width=213),
-                  img(src='el_struktuuri.jpg', height=150, width=258)
+                  img(src='ut_logo.png', height=100, width=246),
+                  img(src='ess_logo.png', height=75, width=160) #,
+                  # img(src='el_struktuuri.jpg', height=150, width=258)
                 )
                 
               )
@@ -1040,7 +1071,9 @@ ui <- dashboardPage(
                 h3(class='center-text','Enamikku inimesi ei saa usaldada 0 ... 10 Enamikku inimesi võib usaldada'),
                 div(
                   class='input-container',
-                  sliderInput("slider2", min = 0, max = 10, value = 1, label = NULL, width=400)
+                  sliderInput("slider2", min = 0, max = 10, value = 1, width=400, label = div(style='width:400px;', 
+                                                                                                            div(style='float:left;', 'Ei usalda'), 
+                                                                                                            div(style='float:right;', 'Saab usaldada')))
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1379,8 +1412,8 @@ ui <- dashboardPage(
               ),
               div(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
-                p(class = 'marginBottomZero', HTML('<br>Kontseptuaalne teostus: Oliver Nahkur, Mare Ainsaar')),
-                p(class = 'marginBottomZero', 'Tehniline teostus: Lisanna Lehes')
+                # p(class = 'marginBottomZero', HTML('<br>Kontseptuaalne teostus: Oliver Nahkur, Mare Ainsaar')),
+                # p(class = 'marginBottomZero', 'Tehniline teostus: Lisanna Lehes')
               )
               
       ) #,
