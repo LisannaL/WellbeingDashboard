@@ -1045,15 +1045,13 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_1",
               div(
                 class='input-page',
-                h3(
-                  class='center-text',
-                  '1. Kõike kokkuvõttes, kuivõrd rahul Te oma eluga üldiselt olete praegu?'), 
-                h3(
-                  class='center-text',
-                  'Üldse mitte rahul 0 ... 10 väga rahul'),
+                h3(class='center-text', '1. Kõike kokkuvõttes, kuivõrd rahul Te oma eluga üldiselt olete praegu?'), 
+                # h3(class='center-text', 'Üldse mitte rahul 0 ... 10 väga rahul'),
                 div(
                   class='input-container',
-                  sliderInput("slider1", min = 0, max = 10, value = 1, label = NULL, width=400)
+                  sliderInput("slider1", min = 0, max = 10, value = 1, width=400, label = div(style='width:400px;', 
+                                                                                              div(style='float:left;', 'Üldse mitte rahul'), 
+                                                                                              div(style='float:right;', 'Väga rahul')))
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1068,12 +1066,13 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','2. Üldiselt hinnates, kas Teie arvates võib enamikku inimesi usaldada?'),
-                h3(class='center-text','Enamikku inimesi ei saa usaldada 0 ... 10 Enamikku inimesi võib usaldada'),
+                #h3(class='center-text','Enamikku inimesi ei saa usaldada 0 ... 10 Enamikku inimesi võib usaldada'),
                 div(
                   class='input-container',
-                  sliderInput("slider2", min = 0, max = 10, value = 1, width=400, label = div(style='width:400px;', 
-                                                                                                            div(style='float:left;', 'Ei usalda'), 
-                                                                                                            div(style='float:right;', 'Saab usaldada')))
+                  sliderInput("slider2", min = 0, max = 10, value = 1, width=400, 
+                              label = div(style='width:400px;',
+                                          div(style='float:left;', 'Ei saa usaldada'),
+                                          div(style='float:right;', 'Võib usaldada')))
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1263,10 +1262,12 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','12. Kui õnnelikuks Te kõike kokku võttes end peate?'),
-                h3(class='center-text','Väga õnnetu 0 ... 10 Väga õnnelik'),
+                # h3(class='center-text','Väga õnnetu 0 ... 10 Väga õnnelik'),
                 div(
                   class='input-container',
-                  sliderInput("slider3", min = 0, max = 10, value = 1, label = NULL, width=400)
+                  sliderInput("slider3", min = 0, max = 10, value = 1, label = div(style='width:400px;', 
+                                                                                   div(style='float:left;', 'Väga õnnetu'), 
+                                                                                   div(style='float:right;', 'Väga õnnelik')), width=400)
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1403,7 +1404,8 @@ ui <- dashboardPage(
                                              "Itaalia" = "Itaalia", "Küpros" = "Küpros", "Leedu" = "Leedu", "Läti" = "Läti", "Montenegro" = "Montenegro", "Poola" = "Poola", 
                                              "Portugal" = "Portugal", "Prantsusmaa" = "Prantsusmaa", "Rootsi" = "Rootsi", "Saksamaa" = "Saksamaa", "Serbia" = "Serbia",
                                              "Slovakkia" = "Slovakkia", "Sloveenia" = "Sloveenia", "Soome" = "Soome",  "Tšehhi" = "Tšehhi", 
-                                             "Ungari" = "Ungari", "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)"))
+                                             "Ungari" = "Ungari", "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)")),
+                  h4('Kui Heaolumeeter tundub Teile kasulik, siis kutsu ka enda sõber seda täitma!')
                 ),
                 
                 # plot 4
@@ -1412,11 +1414,10 @@ ui <- dashboardPage(
               ),
               div(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
-                # p(class = 'marginBottomZero', HTML('<br>Kontseptuaalne teostus: Oliver Nahkur, Mare Ainsaar')),
-                # p(class = 'marginBottomZero', 'Tehniline teostus: Lisanna Lehes')
+                p(class = 'marginBottomZero', HTML('<br>ESS Eesti 2022 © Tartu Ülikool'))
               )
               
-      ) #,
+      ) 
     )
   )
   
