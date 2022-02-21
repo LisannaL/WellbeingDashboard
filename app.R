@@ -360,7 +360,9 @@ plot_koik_heaolud = function(vastaja_data){
                      "Üldine eluga rahulolu")) 
   
   joonis3 = highchart() %>%
-    hc_chart(polar = TRUE) %>% 
+    hc_chart(polar = T,
+             reflow = T,
+             margin = c(0, 50, 50, 100)) %>% 
     hc_xAxis(categories = koik_heaolud2$soned) %>% 
     hc_series(list(
       name = 'Skoor',
@@ -505,6 +507,13 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
                      "Hinnang turvalisusele",
                      "Üldine eluga rahulolu"))
   
+  m <- list(
+    l = 150,
+    r = 150,
+    b = 150,
+    t = 150,
+    pad = 4
+  )
   
   joonis4 = plot_ly(
     type = 'scatterpolar',
@@ -545,7 +554,8 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
           visible = T,
           range = c(0,10))),
       showlegend = T,
-      legend = list(x =0, y = 1, title = list(text = '<b> Joonisele lisamiseks kliki riigil: </b>')))
+      margin = m,
+      legend = list(x =-100, y = 100, title = list(text = '<b> Joonisele lisamiseks kliki riigil: </b>')))
   
   return(joonis4)
   
