@@ -1424,7 +1424,7 @@ ui <- dashboardPage(
               ),
               div(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
-                p(class = 'marginBottomZero', HTML('<br>ESS Eesti 2022 © Tartu Ülikool'))
+                p(class = 'marginBottomZero', HTML('<br><center>ESS Eesti 2022 © Tartu Ülikool</center>'))
               )
               
       ) 
