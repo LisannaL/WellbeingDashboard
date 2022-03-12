@@ -79,7 +79,6 @@ skaleerija_5 = data.frame(row.names = c("1","2","3", "4", "5", "6") , val = c(10
 
 skaleeri_andmed = function(vastused){
   c(kog_rahulolu, euda_usaldus, euda_vaartus, euda_auto, kog_majandus, kog_sotstoetus, afek_masendus, afek_room, euda_huvi, kog_tervis, kog_turvalisus, afek_onnelikkus) %<-% vastused
-  
   euda_vaartus = skaleerija_1[euda_vaartus,]  
   euda_auto = skaleerija_1[euda_auto,]
   kog_majandus = skaleerija_2[kog_majandus, ]
@@ -89,15 +88,13 @@ skaleeri_andmed = function(vastused){
   euda_huvi = skaleerija_5[euda_huvi, ]
   kog_tervis = skaleerija_1[kog_tervis, ]
   kog_turvalisus = skaleerija_2[kog_turvalisus, ]
-  
-  return(c(kog_rahulolu, euda_usaldus, euda_vaartus, euda_auto, kog_majandus, kog_sotstoetus, afek_masendus, afek_room, euda_huvi, kog_tervis, kog_turvalisus, afek_onnelikkus))
+  return(c(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus, afek_onnelikkus, afek_masendus, afek_room, euda_vaartus, euda_auto, euda_huvi, euda_usaldus))
 }
 
 
 ### Add user data to dataset
 lisa_vastaja_rida = function(andmed, vastused){
   vastused = c('Teie', vastused, leia_vastaja_kog_kesk(vastused), leia_vastaja_afek_kesk(vastused), leia_vastaja_euda_kesk(vastused), leia_vastaja_yldskoor(vastused))
-  print(vastused)
   andmed[nrow(andmed) + 1,] = vastused
   andmed$total_heaoluskoor = as.numeric(andmed$total_heaoluskoor)
   andmed$kog_kesk = as.numeric(andmed$kog_kesk)
@@ -175,7 +172,6 @@ theme_swd = function() {
 ### Sõned
 get_heaolu_sõne = function(tase){
   heaolu_sõne = ''
-  
   if (tase >= 9) {
     heaolu_sõne = 'väga kõrge'
   } else if (tase >= 7) {
@@ -224,7 +220,7 @@ plot_yldine_heaolu = function(vastaja_data){
                               showarrow = F,
                               align = 'left',
                               font = list(size = 13, color = "#76787B")),
-           title = list(text = 'Üldine subjektiivne heaolu', 
+           title = list(text = 'Üldine subjektiivne heaolu (riikide keskmised)', 
                         x = 0.18,
                         y = 1,
                         font = list(size = 22, color = "#646369"),
@@ -345,19 +341,21 @@ plot_koik_heaolud = function(vastaja_data){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus) %>% 
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>% 
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>% 
-    arrange(group, skoor) %>% 
-    mutate(soned = c("Heas tujus olemine ja rõõmu tundmine viimasel 2 nädalal", 
-                     "Üldine õnnelikkuse\n tunne", 
+    arrange(group) %>% 
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus", 
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
+                     "Hinnang tervisele",
+                     "Hinnang majanduslikule\n toimetulekule",
+                     "Hinnang turvalisusele",
+                     "Hinnang suhetele:\n sotsiaalne toetus",
                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus", 
-                     "Hinnang tervisele", 
-                     "Hinnang majanduslikule\n toimetulekule", 
-                     "Hinnang turvalisusele", 
-                     "Üldine eluga rahulolu")) 
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"
+                     )) 
+  
   
   joonis3 = highchart() %>%
     hc_chart(polar = T,
@@ -381,7 +379,6 @@ plot_koik_heaolud = function(vastaja_data){
 ### 4. plot: koik heaolud + riigid
 
 plot_koik_heaolud_riigid = function(vastaja_data, input_riik){ 
-  # print(input_riik)
   add_closed_trace <- function(p, r, theta, ...)
   {
     plotly::add_trace(p, r = c(r, r[1]), theta = c(theta, theta[1]), ...)
@@ -397,19 +394,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
-    arrange(group, skoor) %>%
-    mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
-                     "Üldine õnnelikkuse\n tunne",
+    arrange(group) %>%
+    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted: teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus",
-                     "Üldine enda tegevuste\n väärtuslikkuse\n tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
                      "Hinnang turvalisusele",
-                     "Üldine eluga rahulolu"))
+                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"))
   
   koik_eesti = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -421,19 +418,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
-    arrange(group, skoor) %>%
-    mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
-                     "Üldine õnnelikkuse\n tunne",
+    arrange(group) %>%
+    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted: teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus",
-                     "Üldine enda tegevuste\n väärtuslikkuse\n tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
                      "Hinnang turvalisusele",
-                     "Üldine eluga rahulolu"))
+                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"))
   
   koik_taani = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -445,19 +442,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
-    arrange(group, skoor) %>%
-    mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
-                     "Üldine õnnelikkuse\n tunne",
+    arrange(group) %>%
+    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted: teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus",
-                     "Üldine enda tegevuste\n väärtuslikkuse\n tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
                      "Hinnang turvalisusele",
-                     "Üldine eluga rahulolu"))
+                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"))
   
   koik_bulgaaria = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -469,19 +466,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
-    arrange(group, skoor) %>%
-    mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
-                     "Üldine õnnelikkuse\n tunne",
+    arrange(group) %>%
+    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted: teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus",
-                     "Üldine enda tegevuste\n väärtuslikkuse\n tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
                      "Hinnang turvalisusele",
-                     "Üldine eluga rahulolu"))
+                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"))
   
   vali_riik = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -493,19 +490,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
-    arrange(group, skoor) %>%
-    mutate(soned = c("Heas tujus olemine ja\n rõõmu tundmine\n viimasel 2 nädalal",
-                     "Üldine õnnelikkuse\n tunne",
+    arrange(group) %>%
+    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
                      "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Positiivsed suhted: teiste usaldamine",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Autonoomia tunnetus",
-                     "Üldine enda tegevuste\n väärtuslikkuse\n tunnetus",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
                      "Hinnang turvalisusele",
-                     "Üldine eluga rahulolu"))
+                     "Hinnang suhetele:\n sotsiaalne toetus",
+                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                     "Autonoomia tunnetus",
+                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                     "Positiivsed suhted:\n teiste usaldamine"))
   
   m <- list(
     l = 150,
@@ -629,7 +626,7 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
   }
   
   if(vastaja$euda_auto < 4) {
-    soovitused = paste(soovitused,"<b>Teie sõltumatuse tunnetus (asendada igal pool läbivalt autonoomia sõltumatuseks)  ", get_heaolu_sõne(vastaja$euda_auto) ,"</b>– mõelge, mis on põhiline, mis ei lase Teil vabalt otsustada, kuidas oma elu elada ning mida peaks tegema, et olukorda muuta. Kui Te ise ei suuda olukorda muuta, rääkige oma vajadustest ja soovidest tuttavatele, sõpradele, lähedastele.<hr>")
+    soovitused = paste(soovitused,"<b>Teie autonoomia tunnetus on  ", get_heaolu_sõne(vastaja$euda_auto) ,"</b>– mõelge, mis on põhiline, mis ei lase Teil vabalt otsustada, kuidas oma elu elada ning mida peaks tegema, et olukorda muuta. Kui Te ise ei suuda olukorda muuta, rääkige oma vajadustest ja soovidest tuttavatele, sõpradele, lähedastele.<hr>")
   }else {
     vektor = c(vektor, 'autonoomia tunnetus')  
   }
@@ -648,7 +645,13 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
   
   if(length(vektor) != 0) {
     #output$hasti = renderText({paste("Teie", paste(vektor,collapse=", ") ,"on Teil kõik hästi, jätkake samas vaimus.")})
-    output$hasti = renderText({paste("<b>Järgnevate heaolu komponentidega: </b>", paste(vektor,collapse=", ") ," <b>- on Teil kõik hästi, jätkake samas vaimus.</b>")})
+    output$hasti = renderText({paste("<b>Järgnevate heaolu komponentidega on Teil kõik hästi, jätkake samas vaimus:</b>")})
+    
+    df_vektor <- data.frame(head = vektor)
+    
+    output$list <- renderUI({
+      apply(df_vektor, 1, function(x) tags$li(x['head']))
+    })
   }
   
   output$soovitused = renderText({soovitused})
@@ -826,6 +829,10 @@ ui <- dashboardPage(
         margin-bottom: 16px;
       }
       
+      .graph-container ul {
+        margin: 16px 0px;
+      }
+      
       .horizontalCenter {
         display: flex;
         flex-direction: column;
@@ -994,13 +1001,13 @@ ui <- dashboardPage(
                     h2(class = 'marginZero', 'Kui soovite vastuseid nendele küsimustele, siis olete õiges kohas.'),
                     p(class = 'marginBottomZero', 'Heaolumeeter aitab Teil kindlaks teha enda isikliku heaolu taseme, võrrelda enda tulemusi keskmiste Eesti ja teiste Euroopa riikide täisealiste inimestega, välja selgitada enda tugevad ja nõrgad kohad ning saada soovitusi enda heaolu tõstmiseks.'),
                     p(''),
-                    p('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
                     #h2('Mis on Euroopa Sotsiaaluuring?'),
                     p(''),
-                    p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Andmeid kogutakse alates 2002. aastast. Eri riikide andmete võrreldavuse tagamiseks nõutakse rangete protseduurireeglite järgimist. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                    p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärgiks on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
                     h2('Mis on heaolu?'),
-                    span(HTML('<p>Heaolu on see, kuidas meil oma elus läheb. Räägime <b>objektiivsest heaolust</b>, kui vaatleme silmaga nähtavaid ja ühtselt määratletud elutingimusi ehk kuidas minu elu paistab väljastpoolt vaadatuna.<br><br> <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset.</p>')
+                    span(HTML('<p>Heaolu on see, kuidas meil oma elus läheb. <b>Objektiivne heaolu</b> on see, kuidas minu elu paistab väljastpoolt vaadatuna (nt elutingimused). <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme, täpsemalt milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta Teie subjektiivse heaolu taset. Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu - EQLS) andmete põhjal.</p>')
                     ),
+                    # p('Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu) andmete põhjal.'),
                   ),
                   div(
                     class='infoBoxContainer infoBoxContainer-landingPage',
@@ -1018,7 +1025,7 @@ ui <- dashboardPage(
                     ),
                     valueBox(
                       value = "2",
-                      subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EQLS</b>"), 
+                      subtitle = HTML("sotsiaalteadusliku uuringu põhjal"), 
                       color = 'orange',
                       icon = shiny::icon("book-open")
                     )
@@ -1055,7 +1062,8 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_1",
               div(
                 class='input-page',
-                h3(class='center-text', '1. Kõike kokkuvõttes, kuivõrd rahul Te oma eluga üldiselt olete praegu?'), 
+                h3(class='center-text', '1. Kõike kokku võttes, kuivõrd rahul Te oma eluga üldiselt olete praegu?'), 
+                h4(class='center-text', 'Valige enda jaoks sobiv variant, liigutades liugurit skaalal'),
                 # h3(class='center-text', 'Üldse mitte rahul 0 ... 10 väga rahul'),
                 div(
                   class='input-container',
@@ -1076,6 +1084,7 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','2. Üldiselt hinnates, kas Teie arvates võib enamikku inimesi usaldada?'),
+                h4(class='center-text', 'Valige enda jaoks sobiv variant, liigutades liugurit skaalal'),
                 #h3(class='center-text','Enamikku inimesi ei saa usaldada 0 ... 10 Enamikku inimesi võib usaldada'),
                 div(
                   class='input-container',
@@ -1101,8 +1110,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio1",
-                               choices = list("1 - Nõustun täielikult" = 1, "2 - Nõustun" = 2, "3 - Ei seda ega teist" = 3, "4 - Ei nõustu" = 4, "5 - Ei nõustu üldse" = 5),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = c("Nõustun täielikult" = 1, "Nõustun" = 2, "Ei seda ega teist" = 3, "Ei nõustu" = 4, "Ei nõustu üldse" = 5),
+                               selected=character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1121,8 +1130,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio2",
-                               choices = list("1 - Nõustun täielikult" = 1, "2 - Nõustun" = 2, "3 - Ei seda ega teist" = 3, "4 - Ei nõustu" = 4, "5 - Ei nõustu üldse" = 5),
-                               selected = 3, label = NULL, width = 'inherit')
+                               choices = list("Nõustun täielikult" = 1, "Nõustun" = 2, "Ei seda ega teist" = 3, "Ei nõustu" = 4, "Ei nõustu üldse" = 5),
+                               selected = character(0), label = NULL, width = 'inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1140,8 +1149,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio3",
-                               choices = list("1 - Elan /elame mugavalt praeguse sissetuleku juures" = 1, "2 - Saame hakkama praeguse sissetuleku juures" = 2, "3 - Praeguse sissetuleku juures on raske hakkama saada" = 3, "4 - Praeguse sissetuleku juures on väga raske hakkama saada" = 4),
-                               selected = 2, label = NULL, width='inherit')
+                               choices = list("Elan/elame mugavalt praeguse sissetuleku juures" = 1, "Saame hakkama praeguse sissetuleku juures" = 2, "Praeguse sissetuleku juures on raske hakkama saada" = 3, "Praeguse sissetuleku juures on väga raske hakkama saada" = 4),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1160,7 +1169,7 @@ ui <- dashboardPage(
                   class='radio-input-container',
                   radioButtons("radio4",
                                choices = list("Mitte ühtegi" = 1, "1" = 2, "2" = 3, "3" = 4, "4-6" = 5, "7-9" = 6, "10 või enam" = 7),
-                               selected = 2, label = NULL, width='inherit')
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1178,8 +1187,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio5",
-                               choices = list("1 - Kogu aeg" = 1, "2 - Suurema osa ajast" = 2, "3 - Rohkem kui pool ajast" = 3, "4 - Vähem kui pool ajast" = 4, "5 - Mõnikord" = 5, "6 - Mitte kunagi" = 6),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1197,8 +1206,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio6",
-                               choices = list("1 - Kogu aeg" = 1, "2 - Suurema osa ajast" = 2, "3 - Rohkem kui pool ajast" = 3, "4 - Vähem kui pool ajast" = 4, "5 - Mõnikord" = 5, "6 - Mitte kunagi" = 6),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1216,8 +1225,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio7",
-                               choices = list("1 - Kogu aeg" = 1, "2 - Suurema osa ajast" = 2, "3 - Rohkem kui pool ajast" = 3, "4 - Vähem kui pool ajast" = 4, "5 - Mõnikord" = 5, "6 - Mitte kunagi" = 6),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1236,8 +1245,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio8",
-                               choices = list("1 - Väga hea" = 1, "2 - Hea" = 2, "3 - Rahuldav" = 3, "4 - Halb" = 4, "5 - Väga halb" = 5),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = list("Väga hea" = 1, "Hea" = 2, "Rahuldav" = 3, "Halb" = 4, "Väga halb" = 5),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1256,8 +1265,8 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio9",
-                               choices = list("1 - Väga turvaliselt" = 1, "2 - Turvaliselt" = 2, "3 - Mitte eriti turvaliselt" = 3, "4 - Üldse mitte turvaliselt" = 4),
-                               selected = 3, label = NULL, width='inherit')
+                               choices = list("Väga turvaliselt" = 1, "Turvaliselt" = 2, "Mitte eriti turvaliselt" = 3, "Üldse mitte turvaliselt" = 4),
+                               selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1272,6 +1281,7 @@ ui <- dashboardPage(
               div(
                 class='input-page',
                 h3(class='center-text','12. Kui õnnelikuks Te kõike kokku võttes end peate?'),
+                h4(class='center-text', 'Valige enda jaoks sobiv variant, liigutades liugurit skaalal'),
                 # h3(class='center-text','Väga õnnetu 0 ... 10 Väga õnnelik'),
                 div(
                   class='input-container',
@@ -1304,27 +1314,27 @@ ui <- dashboardPage(
               h1("TULEMUSED"),
               div(
                 class='graph-container',
-                div(
-                  class='infoBoxContainer',
-                  valueBox(
-                    value = "> 300 000",
-                    subtitle = "inimese andmed",
-                    icon = shiny::icon("bar-chart"),
-                    color = "red"
-                  ),
-                  valueBox(
-                    value = "26",
-                    subtitle = " Euroopa riigi võrdluses",
-                    icon = shiny::icon("globe-europe"),
-                    color = "yellow"
-                  ),
-                  valueBox(
-                    value = "2",
-                    subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EQLS</b>"), 
-                    color = 'orange',
-                    icon = shiny::icon("book-open")
-                  )
-                ),
+                # div(
+                #   class='infoBoxContainer',
+                #   valueBox(
+                #     value = "> 300 000",
+                #     subtitle = "inimese andmed",
+                #     icon = shiny::icon("bar-chart"),
+                #     color = "red"
+                #   ),
+                #   valueBox(
+                #     value = "26",
+                #     subtitle = " Euroopa riigi võrdluses",
+                #     icon = shiny::icon("globe-europe"),
+                #     color = "yellow"
+                #   ),
+                #   valueBox(
+                #     value = "2",
+                #     subtitle = HTML("sotsiaalteadusliku uuringu põhjal <br><br><b>ESS</b><br><b>EQLS</b>"), 
+                #     color = 'orange',
+                #     icon = shiny::icon("book-open")
+                #   )
+                # ),
                 div(
                   class='graph-text',
                   span(h3('Teie subjektiivne heaolu on ', 
@@ -1385,9 +1395,13 @@ ui <- dashboardPage(
                 class='graph-container',
                 div(
                   class='graph-text polar-graph-text',
-                  div(class="marginBottom48",
+                  div(
                   htmlOutput('hasti', inline=T),
+                  tags$ul(
+                    uiOutput('list')
+                  )
                   ),
+                  h3('Soovitused Teile'),
                   htmlOutput('soovitused', inline=T),
                 ),
                 
@@ -1395,7 +1409,7 @@ ui <- dashboardPage(
                 div(
                   class="highchart-graph-container",
                   highchartOutput("joonis3", width="90%", height="900px")
-                  )#1140
+                  )
               ),
               
               div(
@@ -1415,7 +1429,7 @@ ui <- dashboardPage(
                                              "Portugal" = "Portugal", "Prantsusmaa" = "Prantsusmaa", "Rootsi" = "Rootsi", "Saksamaa" = "Saksamaa", "Serbia" = "Serbia",
                                              "Slovakkia" = "Slovakkia", "Sloveenia" = "Sloveenia", "Soome" = "Soome",  "Tšehhi" = "Tšehhi", 
                                              "Ungari" = "Ungari", "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)")),
-                  h4('Kui Heaolumeeter tundub Teile kasulik, siis kutsu ka enda sõber seda täitma!')
+                  h4('Kui Heaolumeeter tundub Teile kasulik, siis kutsuge ka enda sõber seda täitma!')
                 ),
                 
                 # plot 4
@@ -1440,19 +1454,65 @@ server <- function(input, output, session) {
   Results <- reactive(c(
     input$slider1,  input$slider2, input$radio1, input$radio2, input$radio3, input$radio4, input$radio5, input$radio6, input$radio7, input$radio8, input$radio9, input$slider3))
   
-  
   observeEvent(input$select, {
-    skaleeritud_andmed = skaleeri_andmed(Results())
-    vastajaga_andmed = lisa_vastaja_rida(andmed, skaleeritud_andmed)
-    
-    output$joonis4 = renderPlotly({plot_koik_heaolud_riigid(vastajaga_andmed, input$select)})
+    if(length(Results) == 12) {
+      skaleeritud_andmed = skaleeri_andmed(Results())
+      vastajaga_andmed = lisa_vastaja_rida(andmed, skaleeritud_andmed)
+      
+      output$joonis4 = renderPlotly({plot_koik_heaolud_riigid(vastajaga_andmed, input$select)})
+    }
+  })
+  
+  # radio buttons enable/disable
+  disable('edasi_3')
+  observeEvent(input$radio1, once=TRUE, {
+    enable('edasi_3')
+  })
+  
+  disable('edasi_4')
+  observeEvent(input$radio2, once=TRUE, {
+    enable('edasi_4')
+  })
+  
+  disable('edasi_5')
+  observeEvent(input$radio3, once=TRUE, {
+    enable('edasi_5')
+  })
+  
+  disable('edasi_6')
+  observeEvent(input$radio4, once=TRUE, {
+    enable('edasi_6')
+  })
+  
+  disable('edasi_7')
+  observeEvent(input$radio5, once=TRUE, {
+    enable('edasi_7')
+  })
+  
+  disable('edasi_8')
+  observeEvent(input$radio6, once=TRUE, {
+    enable('edasi_8')
+  })
+  
+  disable('edasi_9')
+  observeEvent(input$radio7, once=TRUE, {
+    enable('edasi_9')
+  })
+  
+  disable('edasi_10')
+  observeEvent(input$radio8, once=TRUE, {
+    enable('edasi_10')
+  })
+  
+  disable('edasi_11')
+  observeEvent(input$radio9, once=TRUE, {
+    enable('edasi_11')
   })
   
   # Plots
   observeEvent(input$edasi_12, {  
     skaleeritud_andmed = skaleeri_andmed(Results())
     vastajaga_andmed = lisa_vastaja_rida(andmed, skaleeritud_andmed)
-    print(vastajaga_andmed)
     output$joonis = renderPlotly({plot_yldine_heaolu(vastajaga_andmed)})
     output$heaoluTaseNumber = renderText({ render_heaolu_tase_number(vastajaga_andmed) })
     output$heaoluTase = renderText({ render_heaolu_tase(vastajaga_andmed) })
@@ -1532,14 +1592,12 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$edasi, {
-    print(input)
     newtab <- switch(input$tabs, "kysimused" = "kysimus_1")
     updateTabItems(session, "tabs", newtab)
   })
   
   # 1
   observeEvent(input$edasi_1, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_1" = "kysimus_2")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1550,7 +1608,6 @@ server <- function(input, output, session) {
   
   # 2
   observeEvent(input$edasi_2, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_2" = "kysimus_3")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1560,7 +1617,6 @@ server <- function(input, output, session) {
   })
   # 3
   observeEvent(input$edasi_3, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_3" = "kysimus_4")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1571,7 +1627,6 @@ server <- function(input, output, session) {
   
   # 4
   observeEvent(input$edasi_4, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_4" = "kysimus_5")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1582,7 +1637,6 @@ server <- function(input, output, session) {
   
   # 5
   observeEvent(input$edasi_5, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_5" = "kysimus_6")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1593,7 +1647,6 @@ server <- function(input, output, session) {
   
   # 6
   observeEvent(input$edasi_6, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_6" = "kysimus_7")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1604,7 +1657,6 @@ server <- function(input, output, session) {
   
   # 7
   observeEvent(input$edasi_7, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_7" = "kysimus_8")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1615,7 +1667,6 @@ server <- function(input, output, session) {
   
   # 8
   observeEvent(input$edasi_8, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_8" = "kysimus_9")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1626,7 +1677,6 @@ server <- function(input, output, session) {
   
   # 9
   observeEvent(input$edasi_9, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_9" = "kysimus_10")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1637,7 +1687,6 @@ server <- function(input, output, session) {
   
   # 10
   observeEvent(input$edasi_10, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_10" = "kysimus_11")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1648,7 +1697,6 @@ server <- function(input, output, session) {
   
   # 11
   observeEvent(input$edasi_11, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_11" = "kysimus_12")
     updateTabItems(session, "tabs", newtab)
   })
@@ -1659,7 +1707,6 @@ server <- function(input, output, session) {
   
   # 12
   observeEvent(input$edasi_12, {
-    print(input)
     newtab <- switch(input$tabs, "kysimus_12" = "tulemused")
     updateTabItems(session, "tabs", newtab)
   })
