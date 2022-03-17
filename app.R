@@ -275,7 +275,7 @@ plot_heaolud = function(vastaja_data){
     scale_fill_manual(name = "heaolud", values=c("#F79747", "#4A81BF", "#C3514E")) + #orange2, blue6, red2 # uus: ORANGE1, BLUE2, RED1 
     scale_x_discrete(labels = c("Emotsionaalne heaolu", "Toimetuleku heaolu", "Hinnanguline heaolu")) +
     theme_swd() +
-    annotate("text", x = 4, y = 9.3, 
+    annotate("text", x = 4, y = 1, 
              label = "Skaala:\n0-1.99 Väga madal\n2-3.99 Madal\n4-6.99 Keskmine\n7-8.99 Kõrge\n9-10 Väga kõrge",
              vjust = 0)
   
