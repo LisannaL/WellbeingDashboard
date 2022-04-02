@@ -267,8 +267,7 @@ plot_heaolud = function(vastaja_data){
     gather(heaolud, skoor, kog_kesk:euda_kesk) 
   
   joonis2 = ggplot(heaolud_andmed, aes(heaolud,  y = round(skoor, digits = 2), fill = heaolud,
-                                       text = paste("Teie skoor: ", round(skoor, 2),
-                                                    '\n<b>Skaala:</b>\n0-1.99 Väga madal\n2-3.99 Madal\n4-6.99 Keskmine\n7-8.99 Kõrge\n9-10 Väga kõrge'))) +
+                                       text = paste("Teie skoor: ", round(skoor, 2)))) +
     geom_bar(stat = "identity", show.legend = FALSE, width = 0.6) +
     labs(y="", x = "") +
     #ylim(0, 10) +
@@ -546,8 +545,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
       name = input_riik,
       mode = 'lines+markers',
       r = round(as.numeric(vali_riik$skoor), 2),
-      theta = vali_riik$soned,
-      visible = "legendonly") %>%
+      theta = vali_riik$soned) %>%
     layout(
       polar = list(
         radialaxis = list(
@@ -742,7 +740,7 @@ ui <- dashboardPage(
       }
       
       .infoBoxContainer {
-        display: flex;
+        display: none;
         flex-direction: column;
       }
       
@@ -794,6 +792,8 @@ ui <- dashboardPage(
       .logoContainer {
         display: flex;
         justify-content: center;
+        align-items: center;
+        flex-direction: column;
         margin-top: 48px;
       }
       
@@ -919,6 +919,13 @@ ui <- dashboardPage(
         background: white;
         width: 100%;
       }
+      
+      .bottomDisclaimer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 32px;
+      }
 
       p {
         text-align: justify
@@ -945,7 +952,7 @@ ui <- dashboardPage(
       }
       
       .tab-pane {
-        padding: 32px;
+        padding: 32px 32px 0 32px;
       }
       
       .fa-info {
@@ -984,6 +991,14 @@ ui <- dashboardPage(
       @media (min-width: 768px) {
         .col-sm-4 {
           width: initial;
+        }
+        
+        .logoContainer {
+          flex-direction: row;
+        }
+        
+        .infoBoxContainer {
+          display: flex;
         }
       }
 }
@@ -1041,10 +1056,15 @@ ui <- dashboardPage(
                 div(
                   class = 'logoContainer',
                   img(src='ut_logo.png', height=100, width=246),
-                  img(src='ess_logo.png', height=75, width=160) #,
-                  # img(src='el_struktuuri.jpg', height=150, width=258)
+                  img(src='ess_logo.png', height=75, width=160),
+                  img(src='etag.png', height=75, width=240)
                 )
                 
+              ),
+              div(
+                class='bottomDisclaimer',
+                p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
+                p('ESS Eesti 2022 © Tartu Ülikool')
               )
       ),
       
@@ -1308,7 +1328,7 @@ ui <- dashboardPage(
                 class = 'btnContainer',
                 
                 actionButton(class='newButton' ,'switchtab1', 'Mine küsimustikku täitma')
-              )
+              ),
       ),
       
       
@@ -1441,8 +1461,13 @@ ui <- dashboardPage(
               ),
               div(
                 p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
-                p(class = 'marginBottomZero', HTML('<br><center>ESS Eesti 2022 © Tartu Ülikool</center>'))
-              )
+                div(
+                  class='bottomDisclaimer',
+                  p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
+                  p('ESS Eesti 2022 © Tartu Ülikool')
+                )
+              ),
+
               
       ) 
     )
