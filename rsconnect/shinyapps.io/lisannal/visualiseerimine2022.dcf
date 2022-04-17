@@ -5,10 +5,10 @@ account: lisannal
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5437821
-bundleId: 5695819
+bundleId: 5806858
 url: https://lisannal.shinyapps.io/visualiseerimine2022/
-when: 1647531834.65497
-lastSyncTime: 1647531834.65497
+when: 1650202440.8915
+lastSyncTime: 1650202440.8915
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RData|joonis.R|README.md

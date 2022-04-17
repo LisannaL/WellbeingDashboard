@@ -274,9 +274,9 @@ plot_heaolud = function(vastaja_data){
     scale_fill_manual(name = "heaolud", values=c("#F79747", "#4A81BF", "#C3514E")) + #orange2, blue6, red2 # uus: ORANGE1, BLUE2, RED1 
     scale_x_discrete(labels = c("Emotsionaalne heaolu", "Toimetuleku heaolu", "Hinnanguline heaolu")) +
     theme_swd() +
-    annotate("text", x = 4, y = 1, 
+    annotate("text", x = 4.5, y = 1, 
              label = "0-1.99 Väga madal\n2-3.99 Madal         \n4-6.99 Keskmine   \n7-8.99 Kõrge         \n9-10 Väga kõrge   ",
-             color = "#646369")
+             color = "#646369", size = 3.5)
   
   
   joonis2 = ggplotly(joonis2, tooltip = c('text')) %>% 
