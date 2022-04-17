@@ -275,7 +275,7 @@ plot_heaolud = function(vastaja_data){
     scale_x_discrete(labels = c("Emotsionaalne heaolu", "Toimetuleku heaolu", "Hinnanguline heaolu")) +
     theme_swd() +
     annotate("text", x = 4, y = 1, 
-             label = "0-1.99 Väga madal\n2-3.99 Madal\n4-6.99 Keskmine\n7-8.99 Kõrge\n9-10 Väga kõrge",
+             label = "0-1.99 Väga madal\n2-3.99 Madal         \n4-6.99 Keskmine   \n7-8.99 Kõrge         \n9-10 Väga kõrge   ",
              color = "#646369")
   
   
