@@ -1064,7 +1064,7 @@ ui <- dashboardPage(
               div(
                 class='bottomDisclaimer',
                 p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
-                p('ESS Eesti 2022 © Tartu Ülikool')
+                p('Nahkur, Lehes, Ainsaar. 2022')
               )
       ),
       
@@ -1464,7 +1464,7 @@ ui <- dashboardPage(
                 div(
                   class='bottomDisclaimer',
                   p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
-                  p('ESS Eesti 2022 © Tartu Ülikool')
+                  p('Nahkur, Lehes, Ainsaar. 2022')
                 )
               ),
 
