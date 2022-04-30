@@ -897,6 +897,12 @@ ui <- dashboardPage(
         width: 38% !important;
       }
       
+      .bartext-inside {
+        display: none;
+      }
+      
+      
+      
       .doubleLineHeight {
         line-height: 2;
       }
