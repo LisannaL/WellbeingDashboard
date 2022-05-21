@@ -813,6 +813,7 @@ ui <- dashboardPage(
       .radio-input-container {
         display: flex;
         justify-content: center;
+        margin-top: 8px;
         margin-left: 16px;
       }
       
@@ -827,11 +828,14 @@ ui <- dashboardPage(
       .graph-container {
         display: flex;
         margin-bottom: 16px;
-        box-shadow: 0px 5px 11px 1px lightgrey;
       }
       
       .graph-container ul {
         margin: 16px 0px;
+      }
+      
+      .graph-container > div {
+         box-shadow: 0px 5px 11px 1px lightgrey;
       }
       
       .horizontalCenter {
@@ -886,7 +890,7 @@ ui <- dashboardPage(
       
       .graph-container-reverse .graph-text-evenly {
         margin-right: unset;
-        #margin-left: 16px;
+        margin-left: initial;
       }
       
       .graph-text-evenly .shiny-input-container {
@@ -1032,10 +1036,7 @@ ui <- dashboardPage(
         }
         
         .radio-input-container {
-          display: flex;
-          justify-content: center;
-          margin-top: 8px;
-          margin-left: 16px;
+          margin-top: 64px;
         }
         
         .plotly {
@@ -1043,13 +1044,13 @@ ui <- dashboardPage(
         }
         
         .graph-text {
-          width: 100%;
+          width: 33%;
           margin-right: 16px;
         }
         
         .graph-container-reverse .graph-text {
           margin-right: unset;
-          #margin-left: 16px;
+          margin-left: 16px;
           width: 50%;
         }
         
@@ -1072,6 +1073,10 @@ ui <- dashboardPage(
         
         .mobile-notification {
           display: none;
+        }
+        
+        .graph-container-reverse .graph-text-evenly {
+          margin-left: 16px;
         }
       }
 }
