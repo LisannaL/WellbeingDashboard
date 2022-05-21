@@ -725,6 +725,13 @@ ui <- dashboardPage(
         text-align: justify;
       }
       
+      .actionBtnContainer {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        bottom: 0;
+      }
+      
       .input-page {
         padding: 16px;
         height: 460px;
@@ -774,15 +781,6 @@ ui <- dashboardPage(
         margin-top: 16px;
       }
       
-      .actionBtnContainer {
-        display: flex;
-        justify-content: center;
-        margin-top: 64px;
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-      }
-      
       .input-page .btn-default {
         padding: 16px;
         font-size: 16px;
@@ -815,7 +813,6 @@ ui <- dashboardPage(
       .radio-input-container {
         display: flex;
         justify-content: center;
-        margin-top: 64px;
         margin-left: 16px;
       }
       
@@ -848,10 +845,8 @@ ui <- dashboardPage(
       }
       
       .graph-text {
-        margin-right: 16px;
         background: white;
         padding: 32px;
-        width: 33%;
         
         display: flex;
         flex-direction: column;
@@ -859,10 +854,8 @@ ui <- dashboardPage(
       }
       
       .graph-text-evenly {
-        margin-right: 16px;
         background: white;
         padding: 32px;
-        width: 33%;
         
         display: flex;
         flex-direction: column;
@@ -876,13 +869,15 @@ ui <- dashboardPage(
       
       .graph-container-reverse .graph-text {
         margin-right: unset;
-        margin-left: 16px;
-        width: 50%;
       }
       
       .graph-container-reverse .graph-text-evenly {
         margin-right: unset;
-        margin-left: 16px;
+        #margin-left: 16px;
+      }
+      
+      .graph-text-evenly .shiny-input-container {
+        width: initial;
       }
       
       .white-graph-container {
@@ -893,16 +888,10 @@ ui <- dashboardPage(
         background: white;
       }
       
-      .polar-graph-text {
-        width: 38% !important;
-      }
-      
       .bartext-inside {
         display: none;
       }
-      
-      
-      
+
       .doubleLineHeight {
         line-height: 2;
       }
@@ -919,7 +908,7 @@ ui <- dashboardPage(
       }
       
       .highchart-graph-container {
-        display: flex;
+        display: none;
         justify-content: center;
         align-items: center;
         background: white;
@@ -931,6 +920,10 @@ ui <- dashboardPage(
         flex-direction: column;
         align-items: center;
         margin-top: 32px;
+      }
+      
+      .plotly {
+        display: none;
       }
 
       p {
@@ -953,12 +946,21 @@ ui <- dashboardPage(
       .irs-grid-text {
           font-size: 16px;
       }
+      
+      .control-label {
+        width: 100%;
+      }
+      
+      .control-label > div {
+        width: initial !important;
+      }
+      
       .small {
         display: none
       }
       
       .tab-pane {
-        padding: 32px 32px 0 32px;
+        padding: initial;
       }
       
       .fa-info {
@@ -1005,6 +1007,54 @@ ui <- dashboardPage(
         
         .infoBoxContainer {
           display: flex;
+        }
+        
+        .tab-pane {
+          padding: 32px 32px 0 32px;
+        }
+        
+        .actionBtnContainer {
+          margin-top: 64px;
+          position: absolute;
+        }
+        
+        .radio-input-container {
+          display: flex;
+          justify-content: center;
+          margin-top: 8px;
+          margin-left: 16px;
+        }
+        
+        .plotly {
+          display: flex;
+        }
+        
+        .graph-text {
+          width: 100%;
+          margin-right: 16px;
+        }
+        
+        .graph-container-reverse .graph-text {
+          margin-right: unset;
+          #margin-left: 16px;
+          width: 50%;
+        }
+        
+        .graph-text-evenly {
+          margin-right: 16px;
+          width: 33%;
+        }
+        
+        .highchart-graph-container {
+          display: flex;
+        }
+        
+        .polar-graph-text {
+          width: 38% !important;
+        }
+        
+        .graph-text-evenly .shiny-input-container {
+          width: initial;
         }
       }
 }
