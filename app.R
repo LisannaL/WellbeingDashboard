@@ -827,6 +827,7 @@ ui <- dashboardPage(
       .graph-container {
         display: flex;
         margin-bottom: 16px;
+        box-shadow: 0px 5px 11px 1px lightgrey;
       }
       
       .graph-container ul {
