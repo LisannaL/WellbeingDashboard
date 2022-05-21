@@ -867,6 +867,18 @@ ui <- dashboardPage(
         width: 150px;
       }
       
+      .mobile-notification h2 {
+        display: flex;
+      }
+      
+      .mobile-notification h2 {
+        font-size: 14px;
+        background: #ffb6c154;
+        padding: 8px;
+        border-radius: 4px;
+        width: 100%;
+      }
+      
       .graph-container-reverse .graph-text {
         margin-right: unset;
       }
@@ -1055,6 +1067,10 @@ ui <- dashboardPage(
         
         .graph-text-evenly .shiny-input-container {
           width: initial;
+        }
+        
+        .mobile-notification {
+          display: none;
         }
       }
 }
@@ -1391,6 +1407,10 @@ ui <- dashboardPage(
       # Third tab content
       tabItem(tabName = "tulemused",
               h1("TULEMUSED"),
+              div(
+                class="mobile-notification",
+                h2("Kasuta suuremat ekraani, et näha ka jooniseid")
+              ),
               div(
                 class='graph-container',
                 # div(
