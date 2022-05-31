@@ -1542,7 +1542,7 @@ ui <- dashboardPage(
                 
               ),
               div(
-                p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://www.yti.ut.ee/et/euroopa-sotsiaaluuring')),
+                p(class = 'marginBottomZero', 'Euroopa Sotsiaaluuringu andmed on kõigile vabaks kasutamiseks. Vaata lähemalt: ', a('Euroopa Sotsiaaluringu Eesti veebikodu.', href='https://uhiskond.ut.ee/et/sisu/euroopa-sotsiaaluuring')),
                 div(
                   class='bottomDisclaimer',
                   p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
