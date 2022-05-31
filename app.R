@@ -1099,7 +1099,7 @@ ui <- dashboardPage(
                     p(''),
                     #h2('Mis on Euroopa Sotsiaaluuring?'),
                     p(''),
-                    p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärk on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://www.yti.ut.ee/et/ess/euroopa-sotsiaaluuring')),
+                    p('Euroopa Sotsiaaluuring (ESS - European Social Survey) on rahvusvaheline sotsiaalteaduslik uuring ja ühiskonnateaduste taristu, mille eesmärk on ühiskondade arengu seaduspärasuste uurimise võimaldamine. Kogutud andmed võimaldavad analüüsida hoiakute, institutsioonide arengu ja inimeste käitumise vahelist seost ning mitmeid muid protsesse ühiskondades. Vaata lähemalt ', a('siit.', href='https://uhiskond.ut.ee/et/sisu/euroopa-sotsiaaluuring')),
                     h2('Mis on heaolu?'),
                     span(HTML('<p>Heaolu on see, kuidas meil oma elus läheb. <b>Objektiivne heaolu</b> on see, kuidas minu elu paistab väljastpoolt vaadatuna (nt elutingimused). <b>Subjektiivne heaolu</b> on see, kuidas me ise oma elu näeme – milliseid tundeid ja emotsioone me tunneme, kuidas toimime isiklikul ja sotsiaalsel tasandil ning kuidas ise hindame „kuidas meil oma elus läheb“. Heaolumeeter aitab mõõta subjektiivse heaolu taset. Heaolumeeter on välja töötatud Euroopa Sotsiaaluuringu (ja väiksemal määral Euroopa elukvaliteedi uuringu - EQLS) andmete põhjal.</p>')
                     ),
