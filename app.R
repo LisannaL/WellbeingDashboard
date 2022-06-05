@@ -942,6 +942,10 @@ ui <- dashboardPage(
       .plotly {
         display: none;
       }
+      
+      .last-graph-box {
+        display: none;
+      }
 
       p {
         text-align: justify
@@ -1077,6 +1081,10 @@ ui <- dashboardPage(
         
         .graph-container-reverse .graph-text-evenly {
           margin-left: 16px;
+        }
+        
+        .last-graph-box {
+          display: flex;
         }
       }
 }
@@ -1518,7 +1526,7 @@ ui <- dashboardPage(
               ),
               
               div(
-                class='graph-container graph-container-reverse',
+                class='graph-container graph-container-reverse last-graph-box',
                 div(
                   class="graph-text-evenly",
                   #
