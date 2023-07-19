@@ -458,11 +458,11 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
                      "Positiivsed suhted:\n teiste usaldamine"))
   
-  koik_bulgaaria = vastaja_data %>%
+  koik_serbia = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
-    filter(riik== 'Bulgaaria') %>%
+    filter(riik== 'Serbia') %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
@@ -531,10 +531,10 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
       theta = koik_taani$soned,
       visible = "legendonly") %>%
     add_closed_trace(
-      name = 'Bulgaaria',
+      name = 'Serbia',
       mode = 'lines+markers',
-      r = round(as.numeric(koik_bulgaaria$skoor), 2),
-      theta = koik_bulgaaria$soned,
+      r = round(as.numeric(koik_serbia$skoor), 2),
+      theta = koik_serbia$soned,
       visible = "legendonly") %>%
     add_closed_trace(
       name = 'Teie',
@@ -1534,7 +1534,7 @@ ui <- dashboardPage(
                           strong(textOutput('heaoluEesti', inline=T)), 
                           span(' kui Eesti keskmine.'))),
                   span(
-                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Bulgaaria) omaga.')),
+                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Serbia) omaga.')),
                   #
                   selectInput("select", label = h3("Vali võrdlemiseks riik:"), 
                               choices = list("Austria" = "Austria", "Belgia" = "Belgia", "Hispaania" = "Hispaania", "Holland" = "Holland", "Horvaatia" = "Horvaatia", "Iirimaa" = "Iirimaa",
