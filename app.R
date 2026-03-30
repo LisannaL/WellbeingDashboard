@@ -12,16 +12,23 @@ library(ggrepel)
 library(highcharter)
 #install.packages('rsconnect')
 library(rsconnect)
+library(readr)
 
 
 Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
 
 ### Import data
-andmed = read.csv2(text = readLines("andmed1.csv", warn = FALSE),header=T)
-andmed$riik = c("Austria","Belgia","Bulgaaria","Tšehhi","Küpros",
+andmed = read_csv("andmed_2026.csv", 
+                  locale = locale())
+andmed$riik = c("Austria",
+                "Belgia",
+                "Bulgaaria",
+                # "Tšehhi",
+                "Küpros",
                 "Saksamaa",
-                "Taani",
+                # "Taani",
                 'Eesti',
+                'Kreeka',
                 'Hispaania',
                 'Soome',
                 'Prantsusmaa',
@@ -73,7 +80,7 @@ ORANGE2 = "#FAC090"
 skaleerija_1 = data.frame(row.names = c("1","2","3", "4", "5") , val = c(10, 7.5, 5, 2.5, 0))
 skaleerija_2 = data.frame(row.names = c("1","2","3", "4") , val = c(10, 6.7, 3.3, 0))
 skaleerija_3 = data.frame(row.names = c("1","2","3", "4", "5", "6", "7") , val = c(0, 1.666, 3.332, 4.998, 6.664, 8.33, 10))
-skaleerija_4 = data.frame(row.names = c("1","2","3", "4", "5", "6") , val = c(0, 2, 4, 6, 8, 10))
+skaleerija_4 = data.frame(row.names = c("1","2","3", "4") , val = c(0, 3.3, 6.7, 10))
 skaleerija_5 = data.frame(row.names = c("1","2","3", "4", "5", "6") , val = c(10, 8, 6, 4, 2 ,0))
 
 
@@ -83,8 +90,8 @@ skaleeri_andmed = function(vastused){
   euda_auto = skaleerija_1[euda_auto,]
   kog_majandus = skaleerija_2[kog_majandus, ]
   kog_sotstoetus = skaleerija_3[kog_sotstoetus, ]
-  afek_masendus = skaleerija_4[afek_masendus, ]
-  afek_room = skaleerija_5[afek_room, ]
+  afek_masendus = skaleerija_2[afek_masendus, ]
+  afek_room = skaleerija_4[afek_room, ]
   euda_huvi = skaleerija_5[euda_huvi, ]
   kog_tervis = skaleerija_1[kog_tervis, ]
   kog_turvalisus = skaleerija_2[kog_turvalisus, ]
@@ -94,25 +101,29 @@ skaleeri_andmed = function(vastused){
 
 ### Add user data to dataset
 lisa_vastaja_rida = function(andmed, vastused){
-  vastused = c('Teie', vastused, leia_vastaja_kog_kesk(vastused), leia_vastaja_afek_kesk(vastused), leia_vastaja_euda_kesk(vastused), leia_vastaja_yldskoor(vastused))
-  andmed[nrow(andmed) + 1,] = vastused
-  andmed$total_heaoluskoor = as.numeric(andmed$total_heaoluskoor)
-  andmed$kog_kesk = as.numeric(andmed$kog_kesk)
-  andmed$afek_kesk = as.numeric(andmed$afek_kesk)
-  andmed$euda_kesk = as.numeric(andmed$euda_kesk)#
   
-  andmed$kog_rahulolu = as.numeric(andmed$kog_rahulolu)
-  andmed$kog_tervis = as.numeric(andmed$kog_tervis)
-  andmed$kog_majandus = as.numeric(andmed$kog_majandus)
-  andmed$kog_turvalisus = as.numeric(andmed$kog_turvalisus)
-  andmed$kog_sotstoetus = as.numeric(andmed$kog_sotstoetus)#
-  andmed$afek_onnelikkus = as.numeric(andmed$afek_onnelikkus)
-  andmed$afek_masendus = as.numeric(andmed$afek_masendus)
-  andmed$afek_room = as.numeric(andmed$afek_room)#
-  andmed$euda_vaartus = as.numeric(andmed$euda_vaartus)
-  andmed$euda_auto = as.numeric(andmed$euda_auto)
-  andmed$euda_huvi = as.numeric(andmed$euda_huvi)
-  andmed$euda_usaldus = as.numeric(andmed$euda_usaldus)
+  uus_rida <- list(
+    riik = "Teie",
+    kog_rahulolu = as.numeric(vastused[1]),
+    kog_tervis = as.numeric(vastused[2]),
+    kog_majandus = as.numeric(vastused[3]),
+    kog_turvalisus = as.numeric(vastused[4]),
+    kog_sotstoetus = as.numeric(vastused[5]),
+    afek_onnelikkus = as.numeric(vastused[6]),
+    afek_masendus = as.numeric(vastused[7]),
+    afek_room = as.numeric(vastused[8]),
+    euda_vaartus = as.numeric(vastused[9]),
+    euda_auto = as.numeric(vastused[10]),
+    euda_huvi = as.numeric(vastused[11]),
+    euda_usaldus = as.numeric(vastused[12]),
+    
+    kog_kesk = leia_vastaja_kog_kesk(vastused),
+    afek_kesk = leia_vastaja_afek_kesk(vastused),
+    euda_kesk = leia_vastaja_euda_kesk(vastused),
+    total_heaoluskoor = leia_vastaja_yldskoor(vastused)
+  )
+  
+  andmed <- dplyr::add_row(andmed, !!!uus_rida)
   
   return(andmed)
 }
@@ -345,8 +356,8 @@ plot_koik_heaolud = function(vastaja_data){
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>% 
     arrange(group) %>% 
     mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
+                     "Masenduse tundmine\n eelmisel nädalal",
+                     "Elust rõõmu tundmine eelmisel nädalal",
                      "Üldine eluga rahulolu",
                      "Hinnang tervisele",
                      "Hinnang majanduslikule\n toimetulekule",
@@ -397,18 +408,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group) %>%
-    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
-                     "Üldine eluga rahulolu",
-                     "Hinnang tervisele",
-                     "Hinnang majanduslikule\n toimetulekule",
-                     "Hinnang turvalisusele",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
-                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Autonoomia tunnetus",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine"))
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
+                      "Masenduse tundmine\n eelmisel nädalal",
+                      "Elust rõõmu tundmine eelmisel nädalal",
+                      "Üldine eluga rahulolu",
+                      "Hinnang tervisele",
+                      "Hinnang majanduslikule\n toimetulekule",
+                      "Hinnang turvalisusele",
+                      "Hinnang suhetele:\n sotsiaalne toetus",
+                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                      "Autonoomia tunnetus",
+                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                      "Positiivsed suhted:\n teiste usaldamine"
+    ))
   
   koik_eesti = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -421,66 +433,69 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group) %>%
-    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
-                     "Üldine eluga rahulolu",
-                     "Hinnang tervisele",
-                     "Hinnang majanduslikule\n toimetulekule",
-                     "Hinnang turvalisusele",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
-                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Autonoomia tunnetus",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine"))
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
+                      "Masenduse tundmine\n eelmisel nädalal",
+                      "Elust rõõmu tundmine eelmisel nädalal",
+                      "Üldine eluga rahulolu",
+                      "Hinnang tervisele",
+                      "Hinnang majanduslikule\n toimetulekule",
+                      "Hinnang turvalisusele",
+                      "Hinnang suhetele:\n sotsiaalne toetus",
+                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                      "Autonoomia tunnetus",
+                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                      "Positiivsed suhted:\n teiste usaldamine"
+    ))
   
-  koik_taani = vastaja_data %>%
+  koik_max = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
-    filter(riik== 'Taani') %>%
+    filter(riik== 'Rootsi') %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group) %>%
-    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
-                     "Üldine eluga rahulolu",
-                     "Hinnang tervisele",
-                     "Hinnang majanduslikule\n toimetulekule",
-                     "Hinnang turvalisusele",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
-                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Autonoomia tunnetus",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine"))
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
+                      "Masenduse tundmine\n eelmisel nädalal",
+                      "Elust rõõmu tundmine eelmisel nädalal",
+                      "Üldine eluga rahulolu",
+                      "Hinnang tervisele",
+                      "Hinnang majanduslikule\n toimetulekule",
+                      "Hinnang turvalisusele",
+                      "Hinnang suhetele:\n sotsiaalne toetus",
+                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                      "Autonoomia tunnetus",
+                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                      "Positiivsed suhted:\n teiste usaldamine"
+    ))
   
-  koik_serbia = vastaja_data %>%
+  koik_min = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
-    filter(riik== 'Serbia') %>%
+    filter(riik== 'Bulgaaria') %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
            afek_onnelikkus, afek_masendus, afek_room,
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus, riik) %>%
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group) %>%
-    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
-                     "Üldine eluga rahulolu",
-                     "Hinnang tervisele",
-                     "Hinnang majanduslikule\n toimetulekule",
-                     "Hinnang turvalisusele",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
-                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Autonoomia tunnetus",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine"))
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
+                      "Masenduse tundmine\n eelmisel nädalal",
+                      "Elust rõõmu tundmine eelmisel nädalal",
+                      "Üldine eluga rahulolu",
+                      "Hinnang tervisele",
+                      "Hinnang majanduslikule\n toimetulekule",
+                      "Hinnang turvalisusele",
+                      "Hinnang suhetele:\n sotsiaalne toetus",
+                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                      "Autonoomia tunnetus",
+                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                      "Positiivsed suhted:\n teiste usaldamine"
+    ))
   
   vali_riik = vastaja_data %>%
     select(kog_rahulolu, kog_tervis, kog_majandus, kog_turvalisus, kog_sotstoetus,
@@ -493,18 +508,19 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>%
     arrange(group) %>%
-    mutate(soned = c("Üldine õnnelikkuse\n tunne", 
-                     "Masenduse ja depressiooni\n tundmine viimasel 2 nädalal",
-                     "Heas tujus olemine ja rõõmu tundmine",
-                     "Üldine eluga rahulolu",
-                     "Hinnang tervisele",
-                     "Hinnang majanduslikule\n toimetulekule",
-                     "Hinnang turvalisusele",
-                     "Hinnang suhetele:\n sotsiaalne toetus",
-                     "Üldine enda tegevuste väärtuslikkuse tunnetus",
-                     "Autonoomia tunnetus",
-                     "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
-                     "Positiivsed suhted:\n teiste usaldamine"))
+    mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
+                      "Masenduse tundmine\n eelmisel nädalal",
+                      "Elust rõõmu tundmine eelmisel nädalal",
+                      "Üldine eluga rahulolu",
+                      "Hinnang tervisele",
+                      "Hinnang majanduslikule\n toimetulekule",
+                      "Hinnang turvalisusele",
+                      "Hinnang suhetele:\n sotsiaalne toetus",
+                      "Üldine enda tegevuste väärtuslikkuse tunnetus",
+                      "Autonoomia tunnetus",
+                      "Igapäevaelu huvipakkuvus\n viimasel 2 nädalal",
+                      "Positiivsed suhted:\n teiste usaldamine"
+    ))
   
   m <- list(
     l = 150,
@@ -525,16 +541,16 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
       r = round(as.numeric(koik_eesti$skoor), 2),
       theta = koik_eesti$soned) %>%
     add_closed_trace(
-      name = 'Taani',
+      name = 'Rootsi',
       mode = 'lines+markers',
-      r = round(as.numeric(koik_taani$skoor), 2),
-      theta = koik_taani$soned,
+      r = round(as.numeric(koik_max$skoor), 2),
+      theta = koik_max$soned,
       visible = "legendonly") %>%
     add_closed_trace(
-      name = 'Serbia',
+      name = 'Bulgaaria',
       mode = 'lines+markers',
-      r = round(as.numeric(koik_serbia$skoor), 2),
-      theta = koik_serbia$soned,
+      r = round(as.numeric(koik_min$skoor), 2),
+      theta = koik_min$soned,
       visible = "legendonly") %>%
     add_closed_trace(
       name = 'Teie',
@@ -561,7 +577,7 @@ plot_koik_heaolud_riigid = function(vastaja_data, input_riik){
 
 render_heaoluEesti = function(vastaja_andmed){
   tase = vastaja_andmed %>% filter(riik == 'Teie')
-  tase = ifelse(tase$total_heaoluskoor > 20.09259, 'kõrgem', 'madalam')
+  tase = ifelse(tase$total_heaoluskoor > 20.31, 'kõrgem', 'madalam') # change value here (Eesti keskmine)
   return(tase)
 }
 
@@ -609,15 +625,15 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
   }
   
   if(vastaja$afek_masendus < 4) {
-    soovitused = paste(soovitused,"<b>Teie masenduse ja depressiooni tundmine viimasel 2 nädalal oli ", get_masendus_sõne(vastaja$afek_masendus ) ,"</b>–  uurige järgevalt veebilehelt, mis on vaimse tervise vitamiinid ja kuidas need Teid võiksid aidata. https://peaasi.ee/vaimse-tervise-vitamiinid/ <hr>")
+    soovitused = paste(soovitused,"<b>Teie masenduse tundmine eelmisel nädalal oli ", get_masendus_sõne(vastaja$afek_masendus ) ,"</b>–  uurige järgevalt veebilehelt, mis on vaimse tervise vitamiinid ja kuidas need Teid võiksid aidata. https://peaasi.ee/vaimse-tervise-vitamiinid/ <hr>")
   }else {
-    vektor = c(vektor, 'masenduse ja depressiooni tundmine viimasel 2 nädalal')  
+    vektor = c(vektor, 'masenduse tundmine eelmisel nädalal')  
   }
   
   if(vastaja$afek_room  < 4) {
-    soovitused = paste(soovitused,"<b>Teie heas tujus olemine ja rõõmu tundmine viimasel 2 nädalal oli ", get_heaolu_sõne(vastaja$afek_room ) ,"</b>– mõelge, mis olukorrad tekitavad Teis tavaliselt hea tuju ja panevad rõõmu tundma. Valige välja mõni olukord ning proovige teadlikult neid olukordi enda jaoks tekitada.<hr>")
+    soovitused = paste(soovitused,"<b>Teie elust rõõmu tundmine eelmise nädalal oli ", get_heaolu_sõne(vastaja$afek_room ) ,"</b>– mõelge, mis olukorrad tekitavad Teis tavaliselt hea tuju ja panevad rõõmu tundma. Valige välja mõni olukord ning proovige teadlikult neid olukordi enda jaoks tekitada.<hr>")
   }else {
-    vektor = c(vektor, 'heas tujus olemine ja rõõmu tundmine viimasel 2 nädalal')  
+    vektor = c(vektor, 'elust rõõmu tundmine eelmise nädalal')  
   }
   
   if(vastaja$euda_vaartus  < 4) {
@@ -1122,7 +1138,7 @@ ui <- dashboardPage(
                       color = "red"
                     ),
                     valueBox(
-                      value = "26",
+                      value = "25",
                       subtitle = " Euroopa riigi võrdluses",
                       icon = shiny::icon("globe-europe"),
                       color = "yellow"
@@ -1150,7 +1166,7 @@ ui <- dashboardPage(
               div(
                 class='bottomDisclaimer',
                 p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
-                p('Nahkur, Lehes, Ainsaar. 2022')
+                p('Nahkur, Lehes, Ainsaar. 2026')
               )
       ),
       
@@ -1292,11 +1308,15 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_7",
               div(
                 class='input-page',
-                h3(class='center-text','7. Kui tihti olete viimase 2 nädala jooksul tundnud masendust ja depressiooni?'),
+                h3(class='center-text','7. Kui suurel osal ajast eelmise nädala jooksul olite masenduses?'),
                 div(
                   class='radio-input-container',
                   radioButtons("radio5",
-                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
+                               choices = list("Üldse mitte või peaaegu üldse mitte" = 1,
+                                              "Väikese osa ajast" = 2, 
+                                              "Enamuse osa ajast" = 3, 
+                                              "Kogu aeg või peaaegu kogu aeg" = 4
+                                              ),
                                selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
@@ -1311,11 +1331,15 @@ ui <- dashboardPage(
       tabItem(tabName = "kysimus_8",
               div(
                 class='input-page',
-                h3(class='center-text','8. Kui tihti olete viimase 2 nädala jooksul olnud rõõmus ja heas tujus? '),
+                h3(class='center-text','8. Kui suurel osal ajast eelmise nädala jooksul tundsite elust rõõmu?'),
                 div(
                   class='radio-input-container',
                   radioButtons("radio6",
-                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
+                               choices = list("Üldse mitte või peaaegu üldse mitte" = 1,
+                                              "Väikese osa ajast" = 2, 
+                                              "Enamuse osa ajast" = 3, 
+                                              "Kogu aeg või peaaegu kogu aeg" = 4
+                                              ),
                                selected = character(0), label = NULL, width='inherit')
                 ),
                 div(
@@ -1436,7 +1460,7 @@ ui <- dashboardPage(
                 #     color = "red"
                 #   ),
                 #   valueBox(
-                #     value = "26",
+                #     value = "25",
                 #     subtitle = " Euroopa riigi võrdluses",
                 #     icon = shiny::icon("globe-europe"),
                 #     color = "yellow"
@@ -1534,14 +1558,36 @@ ui <- dashboardPage(
                           strong(textOutput('heaoluEesti', inline=T)), 
                           span(' kui Eesti keskmine.'))),
                   span(
-                    h4(class='doubleLineHeight', 'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Taani) ja madalaima heaoluga riigi (Serbia) omaga.')),
+                    h4(class='doubleLineHeight', 
+                       'Kõrvaloleval joonisel on võimalik võrrelda enda heaolu aladimensioonide skoore Eesti keskmise, kõrgeima heaoluga riigi (Rootsi) ja madalaima heaoluga riigi (Bulgaaria) omaga.')),
                   #
                   selectInput("select", label = h3("Vali võrdlemiseks riik:"), 
-                              choices = list("Austria" = "Austria", "Belgia" = "Belgia", "Hispaania" = "Hispaania", "Holland" = "Holland", "Horvaatia" = "Horvaatia", "Iirimaa" = "Iirimaa",
-                                             "Itaalia" = "Itaalia", "Küpros" = "Küpros", "Leedu" = "Leedu", "Läti" = "Läti", "Montenegro" = "Montenegro", "Poola" = "Poola", 
-                                             "Portugal" = "Portugal", "Prantsusmaa" = "Prantsusmaa", "Rootsi" = "Rootsi", "Saksamaa" = "Saksamaa", "Serbia" = "Serbia",
-                                             "Slovakkia" = "Slovakkia", "Sloveenia" = "Sloveenia", "Soome" = "Soome",  "Tšehhi" = "Tšehhi", 
-                                             "Ungari" = "Ungari", "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)")),
+                              choices = list(
+                                "Austria" = "Austria", 
+                                "Belgia" = "Belgia", 
+                                "Hispaania" = "Hispaania", 
+                                "Holland" = "Holland", 
+                                "Horvaatia" = "Horvaatia", 
+                                "Iirimaa" = "Iirimaa",
+                                "Itaalia" = "Itaalia", 
+                                "Küpros" = "Küpros", 
+                                "Leedu" = "Leedu", 
+                                "Läti" = "Läti", 
+                                "Montenegro" = "Montenegro", 
+                                "Poola" = "Poola",
+                                "Portugal" = "Portugal", 
+                                "Prantsusmaa" = "Prantsusmaa", 
+                                # "Rootsi" = "Rootsi", 
+                                "Saksamaa" = "Saksamaa", 
+                                "Serbia" = "Serbia",
+                                "Slovakkia" = "Slovakkia", 
+                                "Sloveenia" = "Sloveenia", 
+                                "Soome" = "Soome",  
+                                # "Tšehhi" = "Tšehhi",
+                                "Ungari" = "Ungari", 
+                                "Ühendkuningriigid (UK)" = "Ühendkuningriigid (UK)",
+                                "Kreeka" = "Kreeka"
+                                )),
                   h4('Kui Heaolumeeter tundub Teile kasulik, siis kutsuge ka enda sõber seda täitma!')
                 ),
                 
@@ -1554,7 +1600,7 @@ ui <- dashboardPage(
                 div(
                   class='bottomDisclaimer',
                   p('Uurimistöös on kasutatud tuumiktaristut (Euroopa Sotsiaaluuring Eestis), mida on finantseerinud Eesti Teadusagentuur (TT3).'),
-                  p('Nahkur, Lehes, Ainsaar. 2022')
+                  p('Nahkur, Lehes, Ainsaar. 2026')
                 )
               ),
 
@@ -1831,6 +1877,27 @@ server <- function(input, output, session) {
   observeEvent(input$tagasi_12, {
     newtab <- switch(input$tabs, "kysimus_12" = "kysimus_11")
     updateTabItems(session, "tabs", newtab)
+  })
+  
+  once <- TRUE
+  
+  observe({
+    if (once) {
+      once <<- FALSE
+      try({
+        counter_file <- "counter.txt"
+        
+        count <- if (file.exists(counter_file)) {
+          as.numeric(readLines(counter_file))
+        } else {
+          0
+        }
+        
+        count <- count + 1
+        writeLines(as.character(count), counter_file)
+        
+      }, silent = TRUE)
+    }
   })
   
 }
