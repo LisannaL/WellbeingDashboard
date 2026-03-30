@@ -5,3 +5,6 @@ Available here: https://heaolu.ess.ut.ee/
 
 # Authors
 Oliver Nahkur, Lisanna Lehes, Mare Ainsaar
+
+# Code
+Lisanna Lehes
