@@ -12,14 +12,15 @@ library(ggrepel)
 library(highcharter)
 #install.packages('rsconnect')
 library(rsconnect)
-library(readr)
 
 
 Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
 
 ### Import data
-andmed = read_csv("andmed_2026.csv", 
-                  locale = locale())
+andmed <- read.csv(
+  text = readLines("andmed_2026.csv", warn = FALSE),
+  header = TRUE
+)
 andmed$riik = c("Austria",
                 "Belgia",
                 "Bulgaaria",
@@ -101,29 +102,24 @@ skaleeri_andmed = function(vastused){
 
 ### Add user data to dataset
 lisa_vastaja_rida = function(andmed, vastused){
+  vastused = c('Teie', vastused, leia_vastaja_kog_kesk(vastused), leia_vastaja_afek_kesk(vastused), leia_vastaja_euda_kesk(vastused), leia_vastaja_yldskoor(vastused))
+  andmed[nrow(andmed) + 1,] = vastused
+  andmed$total_heaoluskoor = as.numeric(andmed$total_heaoluskoor)
+  andmed$kog_kesk = as.numeric(andmed$kog_kesk)
+  andmed$afek_kesk = as.numeric(andmed$afek_kesk)
+  andmed$euda_kesk = as.numeric(andmed$euda_kesk)#
   
-  uus_rida <- list(
-    riik = "Teie",
-    kog_rahulolu = as.numeric(vastused[1]),
-    kog_tervis = as.numeric(vastused[2]),
-    kog_majandus = as.numeric(vastused[3]),
-    kog_turvalisus = as.numeric(vastused[4]),
-    kog_sotstoetus = as.numeric(vastused[5]),
-    afek_onnelikkus = as.numeric(vastused[6]),
-    afek_masendus = as.numeric(vastused[7]),
-    afek_room = as.numeric(vastused[8]),
-    euda_vaartus = as.numeric(vastused[9]),
-    euda_auto = as.numeric(vastused[10]),
-    euda_huvi = as.numeric(vastused[11]),
-    euda_usaldus = as.numeric(vastused[12]),
-    
-    kog_kesk = leia_vastaja_kog_kesk(vastused),
-    afek_kesk = leia_vastaja_afek_kesk(vastused),
-    euda_kesk = leia_vastaja_euda_kesk(vastused),
-    total_heaoluskoor = leia_vastaja_yldskoor(vastused)
-  )
-  
-  andmed <- dplyr::add_row(andmed, !!!uus_rida)
+  andmed$kog_rahulolu = as.numeric(andmed$kog_rahulolu)
+  andmed$kog_tervis = as.numeric(andmed$kog_tervis)
+  andmed$kog_majandus = as.numeric(andmed$kog_majandus)
+  andmed$kog_turvalisus = as.numeric(andmed$kog_turvalisus)
+  andmed$kog_sotstoetus = as.numeric(andmed$kog_sotstoetus)#
+  andmed$afek_onnelikkus = as.numeric(andmed$afek_onnelikkus)
+  andmed$afek_masendus = as.numeric(andmed$afek_masendus)
+  andmed$afek_room = as.numeric(andmed$afek_room)#
+  andmed$euda_vaartus = as.numeric(andmed$euda_vaartus)
+  andmed$euda_auto = as.numeric(andmed$euda_auto)
+  andmed$euda_huvi = as.numeric(andmed$euda_huvi)
   
   return(andmed)
 }
