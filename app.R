@@ -21,6 +21,8 @@ andmed <- read.csv(
   text = readLines("andmed_2026.csv", warn = FALSE),
   header = TRUE
 )
+
+# NB! This part ordering is important and needs to match the ordering in Data
 andmed$riik = c("Austria",
                 "Belgia",
                 "Bulgaaria",
@@ -29,7 +31,6 @@ andmed$riik = c("Austria",
                 "Saksamaa",
                 # "Taani",
                 'Eesti',
-                'Kreeka',
                 'Hispaania',
                 'Soome',
                 'Prantsusmaa',
@@ -47,7 +48,8 @@ andmed$riik = c("Austria",
                 'Serbia',
                 'Rootsi',
                 'Sloveenia',
-                'Slovakkia')
+                'Slovakkia',
+                'Kreeka')
 
 # Colors
 GRAY1 = "#231F20"
@@ -349,6 +351,7 @@ plot_koik_heaolud = function(vastaja_data){
            afek_onnelikkus, afek_masendus, afek_room, 
            euda_vaartus, euda_auto, euda_huvi, euda_usaldus) %>% 
     gather(heaolud, skoor, kog_rahulolu:euda_usaldus) %>% 
+    mutate(skoor = as.numeric(skoor)) %>%
     mutate(group=c( rep('Hinnanguline', 5), rep('Emotsionaalne', 3), rep('Toimetuleku', 4))) %>% 
     arrange(group) %>% 
     mutate(soned = c( "Üldine õnnelikkuse\n tunne", 
@@ -676,6 +679,7 @@ render_dimensiooniTekstid = function(output, vastaja_andmed){
 ### app.R ###
 
 ui <- dashboardPage(
+  title = "Heaolu küsimustik – mõõda oma eluga rahulolu ja heaolu taset",
   skin='black-light',
   dashboardHeader(title = "Heaolumeeter"),
   ## Sidebar content
@@ -697,7 +701,25 @@ ui <- dashboardPage(
         '
     ),
     useShinyjs(),
-    
+    tags$head(
+      # Primary SEO
+      tags$meta(name = "description", content = "Täida lühike heaolu küsimustik ja saa personaalne ülevaade oma eluga rahulolust, emotsionaalsest ja kognitiivsest heaolust ning võrdlus teistega."),
+      tags$meta(name = "keywords", content = "heaolu, küsimustik, rahulolu eluga, vaimne tervis, happiness test, wellbeing questionnaire"),
+
+      # Mobile
+      tags$meta(name = "viewport", content = "width=device-width, initial-scale=1"),
+      
+      tags$meta(property = "og:title", content = "Heaolu küsimustik"),
+      tags$meta(property = "og:description", content = "Uuri oma heaolu taset ja võrdle tulemusi teistega."),
+      tags$meta(property = "og:type", content = "website"),
+      tags$meta(property = "og:locale", content = "et_EE"),
+      tags$meta(name = "twitter:card", content = "summary_large_image"),
+      tags$meta(name = "twitter:title", content = "Heaolu küsimustik"),
+      tags$meta(name = "twitter:description", content = "Täida küsimustik ja saa oma heaolu hinnang."),
+      tags$link(rel = "canonical", href = "https://heaolu.ess.ut.ee/"),
+      tags$meta(name = "robots", content = "index, follow"),
+      tags$link(rel = "icon", href = "favicon.ico")
+    ),
     ## Add custom CSS rules
     tags$head(tags$style(HTML('
       @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
@@ -1232,7 +1254,7 @@ ui <- dashboardPage(
                   class='radio-input-container',
                   radioButtons("radio1",
                                choices = c("Nõustun täielikult" = 1, "Nõustun" = 2, "Ei seda ega teist" = 3, "Ei nõustu" = 4, "Ei nõustu üldse" = 5),
-                               selected=character(0), label = NULL, width='inherit')
+                               selected = 3, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1252,7 +1274,7 @@ ui <- dashboardPage(
                   class='radio-input-container',
                   radioButtons("radio2",
                                choices = list("Nõustun täielikult" = 1, "Nõustun" = 2, "Ei seda ega teist" = 3, "Ei nõustu" = 4, "Ei nõustu üldse" = 5),
-                               selected = character(0), label = NULL, width = 'inherit')
+                               selected = 3, label = NULL, width = 'inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1270,8 +1292,13 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio3",
-                               choices = list("Elan/elame mugavalt praeguse sissetuleku juures" = 1, "Saame hakkama praeguse sissetuleku juures" = 2, "Praeguse sissetuleku juures on raske hakkama saada" = 3, "Praeguse sissetuleku juures on väga raske hakkama saada" = 4),
-                               selected = character(0), label = NULL, width='inherit')
+                               choices = list(
+                                 "Elan/elame mugavalt praeguse sissetuleku juures" = 1,
+                                 "Saame hakkama praeguse sissetuleku juures" = 2,
+                                 "Praeguse sissetuleku juures on raske hakkama saada" = 3,
+                                 "Praeguse sissetuleku juures on väga raske hakkama saada" = 4
+                               ),
+                               selected = 2, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1290,7 +1317,7 @@ ui <- dashboardPage(
                   class='radio-input-container',
                   radioButtons("radio4",
                                choices = list("Mitte ühtegi" = 1, "1" = 2, "2" = 3, "3" = 4, "4-6" = 5, "7-9" = 6, "10 või enam" = 7),
-                               selected = character(0), label = NULL, width='inherit')
+                               selected = 4, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1308,12 +1335,13 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio5",
-                               choices = list("Üldse mitte või peaaegu üldse mitte" = 1,
-                                              "Väikese osa ajast" = 2, 
-                                              "Enamuse osa ajast" = 3, 
-                                              "Kogu aeg või peaaegu kogu aeg" = 4
-                                              ),
-                               selected = character(0), label = NULL, width='inherit')
+                               choices = list(
+                                 "Üldse mitte või peaaegu üldse mitte" = 1,
+                                 "Väikese osa ajast" = 2,
+                                 "Enamuse osa ajast" = 3,
+                                 "Kogu aeg või peaaegu kogu aeg" = 4
+                               ),
+                               selected = 2, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1331,12 +1359,13 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio6",
-                               choices = list("Üldse mitte või peaaegu üldse mitte" = 1,
-                                              "Väikese osa ajast" = 2, 
-                                              "Enamuse osa ajast" = 3, 
-                                              "Kogu aeg või peaaegu kogu aeg" = 4
-                                              ),
-                               selected = character(0), label = NULL, width='inherit')
+                               choices = list(
+                                 "Üldse mitte või peaaegu üldse mitte" = 1,
+                                 "Väikese osa ajast" = 2,
+                                 "Enamuse osa ajast" = 3,
+                                 "Kogu aeg või peaaegu kogu aeg" = 4
+                               ),
+                               selected = 3, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1354,8 +1383,15 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio7",
-                               choices = list("Kogu aeg" = 1, "Suurema osa ajast" = 2, "Rohkem kui pool ajast" = 3, "Vähem kui pool ajast" = 4, "Mõnikord" = 5, "Mitte kunagi" = 6),
-                               selected = character(0), label = NULL, width='inherit')
+                               choices = list(
+                                 "Kogu aeg" = 1,
+                                 "Suurema osa ajast" = 2,
+                                 "Rohkem kui pool ajast" = 3,
+                                 "Vähem kui pool ajast" = 4,
+                                 "Mõnikord" = 5,
+                                 "Mitte kunagi" = 6
+                               ),
+                               selected = 3, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1375,7 +1411,7 @@ ui <- dashboardPage(
                   class='radio-input-container',
                   radioButtons("radio8",
                                choices = list("Väga hea" = 1, "Hea" = 2, "Rahuldav" = 3, "Halb" = 4, "Väga halb" = 5),
-                               selected = character(0), label = NULL, width='inherit')
+                               selected = 3, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1394,8 +1430,13 @@ ui <- dashboardPage(
                 div(
                   class='radio-input-container',
                   radioButtons("radio9",
-                               choices = list("Väga turvaliselt" = 1, "Turvaliselt" = 2, "Mitte eriti turvaliselt" = 3, "Üldse mitte turvaliselt" = 4),
-                               selected = character(0), label = NULL, width='inherit')
+                               choices = list(
+                                 "Väga turvaliselt" = 1,
+                                 "Turvaliselt" = 2,
+                                 "Mitte eriti turvaliselt" = 3,
+                                 "Üldse mitte turvaliselt" = 4
+                               ),
+                               selected = 2, label = NULL, width='inherit')
                 ),
                 div(
                   class = 'actionBtnContainer',
@@ -1561,6 +1602,7 @@ ui <- dashboardPage(
                               choices = list(
                                 "Austria" = "Austria", 
                                 "Belgia" = "Belgia", 
+                                # "Bulgaaria" = "Bulgaaria",
                                 "Hispaania" = "Hispaania", 
                                 "Holland" = "Holland", 
                                 "Horvaatia" = "Horvaatia", 
@@ -1575,6 +1617,7 @@ ui <- dashboardPage(
                                 "Prantsusmaa" = "Prantsusmaa", 
                                 # "Rootsi" = "Rootsi", 
                                 "Saksamaa" = "Saksamaa", 
+                                # "Eesti" = "Eesti,"
                                 "Serbia" = "Serbia",
                                 "Slovakkia" = "Slovakkia", 
                                 "Sloveenia" = "Sloveenia", 
@@ -1624,50 +1667,21 @@ server <- function(input, output, session) {
   })
   
   # radio buttons enable/disable
-  disable('edasi_3')
-  observeEvent(input$radio1, once=TRUE, {
-    enable('edasi_3')
-  })
+  radios <- paste0("radio", 1:9)
+  buttons <- paste0("edasi_", 3:11)
   
-  disable('edasi_4')
-  observeEvent(input$radio2, once=TRUE, {
-    enable('edasi_4')
-  })
-  
-  disable('edasi_5')
-  observeEvent(input$radio3, once=TRUE, {
-    enable('edasi_5')
-  })
-  
-  disable('edasi_6')
-  observeEvent(input$radio4, once=TRUE, {
-    enable('edasi_6')
-  })
-  
-  disable('edasi_7')
-  observeEvent(input$radio5, once=TRUE, {
-    enable('edasi_7')
-  })
-  
-  disable('edasi_8')
-  observeEvent(input$radio6, once=TRUE, {
-    enable('edasi_8')
-  })
-  
-  disable('edasi_9')
-  observeEvent(input$radio7, once=TRUE, {
-    enable('edasi_9')
-  })
-  
-  disable('edasi_10')
-  observeEvent(input$radio8, once=TRUE, {
-    enable('edasi_10')
-  })
-  
-  disable('edasi_11')
-  observeEvent(input$radio9, once=TRUE, {
-    enable('edasi_11')
-  })
+  for (i in seq_along(radios)) {
+    local({
+      r <- radios[i]
+      b <- buttons[i]
+      
+      disable(b)
+      
+      observeEvent(input[[r]], {
+        enable(b)
+      }, ignoreNULL = FALSE)
+    })
+  }
   
   # Plots
   observeEvent(input$edasi_12, {  
